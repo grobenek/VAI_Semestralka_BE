@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class Blog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "blog_id")
     private Integer blogId;
 

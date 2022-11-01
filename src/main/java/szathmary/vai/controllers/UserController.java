@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import szathmary.vai.dtos.UserDto;
@@ -56,4 +57,37 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).body(userToReturn);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<UserDto> createUser(@RequestBody User userToCreate) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("UserController", "responded");
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        User createdUser = this.userService.createUser(userToCreate);
+
+        if (createdUser == null) {
+            return ResponseEntity.notFound().headers(headers).build();
+        }
+
+        UserDto userDtoToReturn = modelMapper.map(createdUser, UserDto.class);
+
+        return ResponseEntity.ok().headers(headers).body(userDtoToReturn);
+    }
+
+    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable Integer id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("UserController", "responded");
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        User foundUser = this.userService.getUserById(id);
+
+        if (foundUser == null) {
+            return ResponseEntity.notFound().headers(headers).build();
+        }
+
+        this.userService.deleteUser(foundUser);
+
+        return ResponseEntity.ok().headers(headers).build();
+    }
 }

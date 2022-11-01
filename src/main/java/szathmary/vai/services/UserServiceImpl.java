@@ -41,4 +41,9 @@ public class UserServiceImpl implements IUserService {
     public void deleteUser(User userToDelete) {
         this.userRepository.delete(userToDelete);
     }
+
+    @Override
+    public User createUser(User userToCreate) {
+        return this.userRepository.save(userToCreate);
+    }
 }

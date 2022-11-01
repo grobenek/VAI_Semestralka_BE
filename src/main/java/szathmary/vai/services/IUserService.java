@@ -12,4 +12,6 @@ public interface IUserService {
     User updateUser(User userToUpdate);
 
     void deleteUser(User userToDelete);
+
+    User createUser(User userToCreate);
 }

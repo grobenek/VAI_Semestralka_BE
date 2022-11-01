@@ -1,5 +1,6 @@
 package szathmary.vai.entities;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.LinkedHashSet;
 @Entity(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
     @Column(name = "login")
