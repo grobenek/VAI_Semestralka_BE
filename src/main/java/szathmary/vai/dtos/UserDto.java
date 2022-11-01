@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserDto {
-    public Integer userId;
-    public String login;
-    public Boolean isAdmin;
+    private Integer userId;
+    private String login;
+    private Boolean isAdmin;
 }

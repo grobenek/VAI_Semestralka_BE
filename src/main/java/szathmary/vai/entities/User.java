@@ -1,8 +1,10 @@
 package szathmary.vai.entities;
 
 import lombok.Data;
+import java.util.Set;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 
 @SuppressWarnings("com.haulmont.jpb.LombokDataInspection")
 @Data
@@ -18,4 +20,7 @@ public class User {
     private String password;
     @Column(name = "is_admin")
     private Boolean isAdmin;
+    @OneToMany
+    @JoinColumn(name = "author")
+    private Set<Blog> blogs = new LinkedHashSet<>();
 }
