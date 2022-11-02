@@ -1,5 +1,7 @@
 package szathmary.vai.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,4 +25,7 @@ public class Blog {
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 }
