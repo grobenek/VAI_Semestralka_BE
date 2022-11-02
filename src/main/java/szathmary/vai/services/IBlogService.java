@@ -14,4 +14,6 @@ public interface IBlogService {
     Blog updateBlog(Blog blogToUpdate);
 
     void deleteBlog(Blog blogToDelete);
+
+    Blog createBlog(Blog blogToCreate);
 }

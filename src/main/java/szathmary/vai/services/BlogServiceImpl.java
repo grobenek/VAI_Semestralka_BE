@@ -2,13 +2,14 @@ package szathmary.vai.services;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import szathmary.vai.entities.Blog;
-import szathmary.vai.entities.User;
 import szathmary.vai.repositories.BlogRepository;
 
 import java.util.List;
 
-public class BlogServiceImpl implements IBlogService{
+@Service
+public class BlogServiceImpl implements IBlogService {
 
     private final BlogRepository blogRepository;
 
@@ -39,5 +40,10 @@ public class BlogServiceImpl implements IBlogService{
     @Override
     public void deleteBlog(Blog blogToDelete) {
         this.blogRepository.delete(blogToDelete);
+    }
+
+    @Override
+    public Blog createBlog(Blog blogToCreate) {
+        return this.blogRepository.save(blogToCreate);
     }
 }
