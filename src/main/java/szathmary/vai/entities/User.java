@@ -1,11 +1,10 @@
 package szathmary.vai.entities;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
-import java.util.Set;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("com.haulmont.jpb.LombokDataInspection")
 @Data
@@ -21,7 +20,6 @@ public class User {
     private String password;
     @Column(name = "is_admin")
     private Boolean isAdmin;
-    @OneToMany
-    @JoinColumn(name = "author")
-    private Set<Blog> blogs = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Blog> bookedRooms = new ArrayList<>();
 }

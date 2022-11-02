@@ -1,6 +1,8 @@
 package szathmary.vai.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -14,9 +16,9 @@ public class Blog {
     @Column(name = "blog_id")
     private Integer blogId;
 
-    @ManyToOne
-    @JoinColumn(name = "author")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author", nullable = false)
+    private User author;
 
     @Column(name = "text")
     private String text;
