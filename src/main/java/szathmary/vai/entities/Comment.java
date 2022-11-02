@@ -6,21 +6,26 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
-@Entity(name = "blogs")
-public class Blog {
+@Entity(name = "comments")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "blog_id")
-    private Integer blogId;
+    @Column(name = "comment_id")
+    private Integer commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author", nullable = false)
     private User author;
 
-    @Column(name = "text")
-    private String text;
-
     @Column(name = "timestamp")
     private Timestamp timestamp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blog_id", nullable = false)
+    private Blog blog;
+
+    @Column(name = "text")
+    private String string;
+
 }
