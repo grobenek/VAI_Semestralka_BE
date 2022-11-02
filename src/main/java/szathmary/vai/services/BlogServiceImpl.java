@@ -1,5 +1,6 @@
 package szathmary.vai.services;
 
+import java.util.ArrayList;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,13 @@ public class BlogServiceImpl implements IBlogService {
     }
 
     @Override
-    public Blog updateBlog(Blog blogToUpdate) {
+    public Blog updateBlog(Blog blogToUpdate, Integer authorId) {
         Blog existingBlog = this.getBlogById(blogToUpdate.getBlogId());
+        User authorToUpdate = userRepository.getReferenceById(authorId);
 
         BeanUtils.copyProperties(existingBlog, blogToUpdate, "blogId");
+
+        blogToUpdate.setAuthor(authorToUpdate);
 
         return this.blogRepository.save(blogToUpdate);
     }

@@ -58,6 +58,8 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
   }
 
+  //TODO skontroluj vsetky crud operacie a uprav ich aby to pridavalo foreign keys podla idcka, nie objektu
+  //TODO to iste aj comments - potom validacia
   @RequestMapping(path = "/author/id/{authorId}", method = RequestMethod.POST)
   public ResponseEntity<BlogDto> createBlog(@RequestBody Blog blogToCreate,
       @PathVariable Integer authorId) {
@@ -89,9 +91,9 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).build();
   }
 
-  @RequestMapping(path = "{id}", method = RequestMethod.PUT)
+  @RequestMapping(path = "{id}/author/id/{idAuthor}", method = RequestMethod.PUT)
   public ResponseEntity<BlogDto> updateBlogById(@PathVariable Integer id,
-      @RequestBody Blog blogToUpdate) {
+      @RequestBody Blog blogToUpdate, @PathVariable Integer idAuthor) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog foundBlog = this.blogService.getBlogById(id);
@@ -100,9 +102,9 @@ public class BlogController {
       return ResponseEntity.notFound().headers(headers).build();
     }
 
-    BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId");
+    BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId", "author");
 
-    this.blogService.updateBlog(foundBlog);
+    this.blogService.updateBlog(foundBlog, idAuthor);
     BlogDto blogDtoToReturn = modelMapper.map(foundBlog, BlogDto.class);
 
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
