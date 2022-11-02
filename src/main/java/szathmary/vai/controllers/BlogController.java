@@ -43,15 +43,15 @@ public class BlogController {
     public ResponseEntity<BlogDto> getBlogById(@PathVariable Integer id) {
         HttpHeaders headers = getHttpHeaders();
 
-        Blog user = this.blogService.getBlogById(id);
+        Blog blog = this.blogService.getBlogById(id);
 
-        if (user == null) {
+        if (blog == null) {
             return ResponseEntity.notFound().headers(headers).build();
         }
 
-        BlogDto userToReturn = modelMapper.map(user, BlogDto.class);
+        BlogDto blogDtoToReturn = modelMapper.map(blog, BlogDto.class);
 
-        return ResponseEntity.ok().headers(headers).body(userToReturn);
+        return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -70,7 +70,7 @@ public class BlogController {
     }
 
     @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable Integer id) {
+    public ResponseEntity<HttpStatus> deleteBlogById(@PathVariable Integer id) {
         HttpHeaders headers = getHttpHeaders();
 
         Blog foundBlog = this.blogService.getBlogById(id);
@@ -85,7 +85,7 @@ public class BlogController {
     }
 
     @RequestMapping(path = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<BlogDto> updateUserById(@PathVariable Integer id, @RequestBody Blog blogToUpdate) {
+    public ResponseEntity<BlogDto> updateBlogById(@PathVariable Integer id, @RequestBody Blog blogToUpdate) {
         HttpHeaders headers = getHttpHeaders();
 
         Blog foundBlog = this.blogService.getBlogById(id);
@@ -94,12 +94,12 @@ public class BlogController {
             return ResponseEntity.notFound().headers(headers).build();
         }
 
-        BeanUtils.copyProperties(blogToUpdate, foundBlog, "userId");
+        BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId");
 
         this.blogService.updateBlog(foundBlog);
-        BlogDto userToReturn = modelMapper.map(foundBlog, BlogDto.class);
+        BlogDto blogDtoToReturn = modelMapper.map(foundBlog, BlogDto.class);
 
-        return ResponseEntity.ok().headers(headers).body(userToReturn);
+        return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
     }
 
     private static HttpHeaders getHttpHeaders() {
