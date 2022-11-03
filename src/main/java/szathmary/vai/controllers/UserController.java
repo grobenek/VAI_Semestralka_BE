@@ -22,6 +22,7 @@ import szathmary.vai.entities.User;
 import szathmary.vai.services.IUserService;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -47,7 +48,8 @@ public class UserController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<UserDto> getUserById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<UserDto> getUserById(@PathVariable @NotNull @Positive Integer id) {
+    log.info("getUserById started with id {}", id);
     HttpHeaders headers = getHttpHeaders();
 
     User user = this.userService.getUserById(id);

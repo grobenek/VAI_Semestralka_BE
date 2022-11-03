@@ -22,6 +22,7 @@ import szathmary.vai.entities.Comment;
 import szathmary.vai.services.ICommentService;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {

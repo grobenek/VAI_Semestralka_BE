@@ -22,6 +22,7 @@ import szathmary.vai.entities.Blog;
 import szathmary.vai.services.IBlogService;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/blog")
 public class BlogController {
