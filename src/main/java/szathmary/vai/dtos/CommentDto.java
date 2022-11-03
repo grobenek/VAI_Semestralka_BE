@@ -8,7 +8,7 @@ public class CommentDto {
 
   private Integer commentId;
 
-  private Integer Author;
+  private Integer authorId;
 
   private Timestamp timestamp;
 

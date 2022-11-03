@@ -26,6 +26,6 @@ public class Comment {
     private Blog blog;
 
     @Column(name = "text")
-    private String string;
+    private String text;
 
 }

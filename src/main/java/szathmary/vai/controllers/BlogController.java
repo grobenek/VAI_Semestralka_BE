@@ -58,8 +58,6 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
   }
 
-  //TODO skontroluj vsetky crud operacie a uprav ich aby to pridavalo foreign keys podla idcka, nie objektu
-  //TODO to iste aj comments - potom validacia
   @RequestMapping(path = "/author/id/{authorId}", method = RequestMethod.POST)
   public ResponseEntity<BlogDto> createBlog(@RequestBody Blog blogToCreate,
       @PathVariable Integer authorId) {

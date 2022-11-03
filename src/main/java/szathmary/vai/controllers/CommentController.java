@@ -58,11 +58,13 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).body(commentToReturn);
   }
 
-  @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<CommentDto> createComment(@RequestBody Comment commentToCreate) {
+  @RequestMapping(path = "/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.POST)
+  public ResponseEntity<CommentDto> createComment(@RequestBody Comment commentToCreate,
+      @PathVariable Integer authorId, @PathVariable
+  Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
-    Comment createdComment = this.commentService.createComment(commentToCreate);
+    Comment createdComment = this.commentService.createComment(commentToCreate, authorId, blogId);
 
     if (createdComment == null) {
       return ResponseEntity.notFound().headers(headers).build();
@@ -88,9 +90,9 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).build();
   }
 
-  @RequestMapping(path = "{id}", method = RequestMethod.PUT)
+  @RequestMapping(path = "/{id}/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.PUT)
   public ResponseEntity<CommentDto> updateCommentById(@PathVariable Integer id,
-      @RequestBody Comment commentToUpdate) {
+      @RequestBody Comment commentToUpdate, @PathVariable Integer authorId, @PathVariable Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);
@@ -101,7 +103,7 @@ public class CommentController {
 
     BeanUtils.copyProperties(commentToUpdate, foundComment, "commentId");
 
-    this.commentService.updateComment(foundComment);
+    this.commentService.updateComment(foundComment, authorId, blogId);
     CommentDto CommentDtoToReturn = modelMapper.map(foundComment, CommentDto.class);
 
     return ResponseEntity.ok().headers(headers).body(CommentDtoToReturn);
