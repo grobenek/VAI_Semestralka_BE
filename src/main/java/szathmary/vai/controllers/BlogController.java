@@ -2,6 +2,8 @@ package szathmary.vai.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +47,7 @@ public class BlogController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<BlogDto> getBlogById(@PathVariable Integer id) {
+  public ResponseEntity<BlogDto> getBlogById(@NotNull @Positive @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog blog = this.blogService.getBlogById(id);
@@ -59,8 +62,8 @@ public class BlogController {
   }
 
   @RequestMapping(path = "/author/id/{authorId}", method = RequestMethod.POST)
-  public ResponseEntity<BlogDto> createBlog(@RequestBody Blog blogToCreate,
-      @PathVariable Integer authorId) {
+  public ResponseEntity<BlogDto> createBlog(@Validated @RequestBody Blog blogToCreate,
+      @NotNull @Positive @PathVariable Integer authorId) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId);
@@ -75,7 +78,7 @@ public class BlogController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<HttpStatus> deleteBlogById(@PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteBlogById(@NotNull @Positive @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog foundBlog = this.blogService.getBlogById(id);
@@ -90,8 +93,9 @@ public class BlogController {
   }
 
   @RequestMapping(path = "{id}/author/id/{idAuthor}", method = RequestMethod.PUT)
-  public ResponseEntity<BlogDto> updateBlogById(@PathVariable Integer id,
-      @RequestBody Blog blogToUpdate, @PathVariable Integer idAuthor) {
+  public ResponseEntity<BlogDto> updateBlogById(@NotNull @Positive @PathVariable Integer id,
+      @Validated @RequestBody Blog blogToUpdate,
+      @NotNull @Positive @PathVariable Integer idAuthor) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog foundBlog = this.blogService.getBlogById(id);

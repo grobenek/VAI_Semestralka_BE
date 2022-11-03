@@ -2,6 +2,8 @@ package szathmary.vai.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +47,7 @@ public class CommentController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<CommentDto> getCommentById(@PathVariable Integer id) {
+  public ResponseEntity<CommentDto> getCommentById(@NotNull @Positive @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment comment = this.commentService.getCommentById(id);
@@ -59,8 +62,8 @@ public class CommentController {
   }
 
   @RequestMapping(path = "/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.POST)
-  public ResponseEntity<CommentDto> createComment(@RequestBody Comment commentToCreate,
-      @PathVariable Integer authorId, @PathVariable
+  public ResponseEntity<CommentDto> createComment(@Validated @RequestBody Comment commentToCreate,
+      @NotNull @Positive @PathVariable Integer authorId, @NotNull @Positive @PathVariable
   Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
@@ -76,7 +79,7 @@ public class CommentController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<HttpStatus> deleteCommentById(@PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteCommentById(@NotNull @Positive @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);
@@ -91,8 +94,10 @@ public class CommentController {
   }
 
   @RequestMapping(path = "/{id}/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.PUT)
-  public ResponseEntity<CommentDto> updateCommentById(@PathVariable Integer id,
-      @RequestBody Comment commentToUpdate, @PathVariable Integer authorId, @PathVariable Integer blogId) {
+  public ResponseEntity<CommentDto> updateCommentById(@NotNull @Positive @PathVariable Integer id,
+      @Validated @RequestBody Comment commentToUpdate,
+      @NotNull @Positive @PathVariable Integer authorId,
+      @NotNull @Positive @PathVariable Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);

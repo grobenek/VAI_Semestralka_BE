@@ -1,5 +1,9 @@
 package szathmary.vai.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -7,105 +11,109 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.UserDto;
 import szathmary.vai.entities.User;
 import szathmary.vai.services.IUserService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final IUserService userService;
-    private final ModelMapper modelMapper;
+  private final IUserService userService;
+  private final ModelMapper modelMapper;
 
-    @Autowired
-    public UserController(IUserService userService) {
-        this.userService = userService;
-        this.modelMapper = new ModelMapper();
+  @Autowired
+  public UserController(IUserService userService) {
+    this.userService = userService;
+    this.modelMapper = new ModelMapper();
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<List<UserDto>> getAllUsers() {
+    HttpHeaders headers = getHttpHeaders();
+
+    List<User> users = this.userService.getAllUsers();
+    List<UserDto> usersToReturn = users.stream().map(x -> this.modelMapper.map(x, UserDto.class))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok().headers(headers).body(usersToReturn);
+  }
+
+  @RequestMapping(path = "{id}", method = RequestMethod.GET)
+  public ResponseEntity<UserDto> getUserById(@NotNull @Positive @PathVariable Integer id) {
+    HttpHeaders headers = getHttpHeaders();
+
+    User user = this.userService.getUserById(id);
+
+    if (user == null) {
+      return ResponseEntity.notFound().headers(headers).build();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        HttpHeaders headers = getHttpHeaders();
+    UserDto userToReturn = modelMapper.map(user, UserDto.class);
 
-        List<User> users = this.userService.getAllUsers();
-        List<UserDto> usersToReturn = users.stream().map(x -> this.modelMapper.map(x, UserDto.class)).collect(Collectors.toList());
+    return ResponseEntity.ok().headers(headers).body(userToReturn);
+  }
 
-        return ResponseEntity.ok().headers(headers).body(usersToReturn);
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<UserDto> createUser(@Validated @RequestBody User userToCreate) {
+    HttpHeaders headers = getHttpHeaders();
+
+    User createdUser = this.userService.createUser(userToCreate);
+
+    if (createdUser == null) {
+      return ResponseEntity.notFound().headers(headers).build();
     }
 
-    @RequestMapping(path = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
-        HttpHeaders headers = getHttpHeaders();
+    UserDto userDtoToReturn = modelMapper.map(createdUser, UserDto.class);
 
-        User user = this.userService.getUserById(id);
+    return ResponseEntity.ok().headers(headers).body(userDtoToReturn);
+  }
 
-        if (user == null) {
-            return ResponseEntity.notFound().headers(headers).build();
-        }
+  @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
+  public ResponseEntity<HttpStatus> deleteUserById(@NotNull @Positive @PathVariable Integer id) {
+    HttpHeaders headers = getHttpHeaders();
 
-        UserDto userToReturn = modelMapper.map(user, UserDto.class);
+    User foundUser = this.userService.getUserById(id);
 
-        return ResponseEntity.ok().headers(headers).body(userToReturn);
+    if (foundUser == null) {
+      return ResponseEntity.notFound().headers(headers).build();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<UserDto> createUser(@RequestBody User userToCreate) {
-        HttpHeaders headers = getHttpHeaders();
+    this.userService.deleteUser(foundUser);
 
-        User createdUser = this.userService.createUser(userToCreate);
+    return ResponseEntity.ok().headers(headers).build();
+  }
 
-        if (createdUser == null) {
-            return ResponseEntity.notFound().headers(headers).build();
-        }
+  @RequestMapping(path = "{id}", method = RequestMethod.PUT)
+  public ResponseEntity<UserDto> updateUserById(@NotNull @Positive @PathVariable Integer id,
+      @Validated @RequestBody User userToUpdate) {
+    HttpHeaders headers = getHttpHeaders();
 
-        UserDto userDtoToReturn = modelMapper.map(createdUser, UserDto.class);
+    User foundUser = this.userService.getUserById(id);
 
-        return ResponseEntity.ok().headers(headers).body(userDtoToReturn);
+    if (foundUser == null) {
+      return ResponseEntity.notFound().headers(headers).build();
     }
 
-    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable Integer id) {
-        HttpHeaders headers = getHttpHeaders();
+    BeanUtils.copyProperties(userToUpdate, foundUser, "userId");
 
-        User foundUser = this.userService.getUserById(id);
+    this.userService.updateUser(foundUser);
+    UserDto userToReturn = modelMapper.map(foundUser, UserDto.class);
 
-        if (foundUser == null) {
-            return ResponseEntity.notFound().headers(headers).build();
-        }
+    return ResponseEntity.ok().headers(headers).body(userToReturn);
+  }
 
-        this.userService.deleteUser(foundUser);
-
-        return ResponseEntity.ok().headers(headers).build();
-    }
-
-    @RequestMapping(path = "{id}", method = RequestMethod.PUT)
-    public ResponseEntity<UserDto> updateUserById(@PathVariable Integer id, @RequestBody User userToUpdate) {
-        HttpHeaders headers = getHttpHeaders();
-
-        User foundUser = this.userService.getUserById(id);
-
-        if (foundUser == null) {
-            return ResponseEntity.notFound().headers(headers).build();
-        }
-
-        BeanUtils.copyProperties(userToUpdate, foundUser, "userId");
-
-        this.userService.updateUser(foundUser);
-        UserDto userToReturn = modelMapper.map(foundUser, UserDto.class);
-
-        return ResponseEntity.ok().headers(headers).body(userToReturn);
-    }
-
-    private static HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("UserController", "responded");
-        headers.add("Access-Control-Allow-Origin", "*");
-        return headers;
-    }
+  private static HttpHeaders getHttpHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("UserController", "responded");
+    headers.add("Access-Control-Allow-Origin", "*");
+    return headers;
+  }
 }
