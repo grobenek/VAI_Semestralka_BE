@@ -9,7 +9,7 @@ public interface ICommentService {
 
   Comment getCommentById(Integer id);
 
-  Comment updateComment(Comment blogToUpdate, Integer authorId, Integer blogId);
+  void updateComment(Comment blogToUpdate, Integer authorId, Integer blogId);
 
   void deleteComment(Comment blogToDelete);
 

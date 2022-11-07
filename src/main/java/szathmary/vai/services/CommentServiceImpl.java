@@ -36,14 +36,14 @@ public class CommentServiceImpl implements ICommentService {
   }
 
   @Override
-  public Comment updateComment(Comment commentToUpdate, Integer authorId, Integer blogId) {
+  public void updateComment(Comment commentToUpdate, Integer authorId, Integer blogId) {
     Blog blogToUpdate = blogRepository.getReferenceById(blogId);
     User authorToUpdate = userRepository.getReferenceById(authorId);
 
     commentToUpdate.setBlog(blogToUpdate);
     commentToUpdate.setAuthor(authorToUpdate);
 
-    return this.commentRepository.save(commentToUpdate);
+    this.commentRepository.save(commentToUpdate);
   }
 
   @Override
