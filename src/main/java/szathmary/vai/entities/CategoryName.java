@@ -28,6 +28,6 @@ public class CategoryName {
   @Size(max = 65535, message = "CategoryName name size can be maximum of 30 characters!")
   private String name;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "categoryName", fetch = FetchType.LAZY)
   private List<Category> categories;
 }

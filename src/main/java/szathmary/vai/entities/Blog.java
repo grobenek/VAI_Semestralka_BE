@@ -45,7 +45,7 @@ public class Blog {
   @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "blog")
+  @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
   private List<Category> categories = new ArrayList<>();
 
   public void setComments(List<Comment> comments) {
