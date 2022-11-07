@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 
@@ -33,6 +34,7 @@ public class Blog {
 
   @NotNull(message = "Blog text cannot be null!")
   @NotBlank(message = "Blog text cannot be blank!")
+  @Size(max = 65535, message = "Blog text size can be maximum of 65535 characters!")
   @Column(name = "text")
   private String text;
 

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -24,6 +25,7 @@ public class CategoryName {
   @Column(name = "name")
   @NotNull(message = "CategoryName name cannot be null!")
   @NotBlank(message = "CategoryName name cannot be blank!")
+  @Size(max = 65535, message = "CategoryName name size can be maximum of 30 characters!")
   private String name;
 
   @OneToMany(fetch = FetchType.LAZY)

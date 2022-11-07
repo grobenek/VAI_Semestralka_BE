@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -34,6 +35,7 @@ public class Comment {
   private Blog blog;
   @NotNull(message = "Comment text cannot be null!")
   @NotBlank(message = "Comment text cannot be blank!")
+  @Size(max = 65535, message = "Comment text size can be maximum of 65535 characters!")
   @Column(name = "text")
   private String text;
 
