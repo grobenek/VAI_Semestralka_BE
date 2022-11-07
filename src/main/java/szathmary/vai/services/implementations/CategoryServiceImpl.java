@@ -3,7 +3,11 @@ package szathmary.vai.services.implementations;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import szathmary.vai.entities.Blog;
 import szathmary.vai.entities.Category;
+import szathmary.vai.entities.CategoryName;
+import szathmary.vai.repositories.BlogRepository;
+import szathmary.vai.repositories.CategoryNameRepository;
 import szathmary.vai.repositories.CategoryRepository;
 import szathmary.vai.services.interfaces.ICategoryService;
 
@@ -12,9 +16,16 @@ public class CategoryServiceImpl implements ICategoryService {
 
   private final CategoryRepository categoryRepository;
 
+  private final BlogRepository blogRepository;
+
+  private final CategoryNameRepository categoryNameRepository;
+
   @Autowired
-  public CategoryServiceImpl(CategoryRepository categoryRepository) {
+  public CategoryServiceImpl(CategoryRepository categoryRepository, BlogRepository blogRepository,
+      CategoryNameRepository categoryNameRepository) {
     this.categoryRepository = categoryRepository;
+    this.blogRepository = blogRepository;
+    this.categoryNameRepository = categoryNameRepository;
   }
 
   @Override
@@ -28,7 +39,13 @@ public class CategoryServiceImpl implements ICategoryService {
   }
 
   @Override
-  public void updateCategory(Category categoryToUpdate) {
+  public void updateCategory(Category categoryToUpdate, Integer categoryNameId, Integer blogId) {
+    Blog blog = blogRepository.getReferenceById(blogId);
+    CategoryName categoryName = categoryNameRepository.getReferenceById(categoryNameId);
+
+    categoryToUpdate.setBlog(blog);
+    categoryToUpdate.setCategoryName(categoryName);
+
     this.categoryRepository.save(categoryToUpdate);
   }
 
@@ -38,7 +55,14 @@ public class CategoryServiceImpl implements ICategoryService {
   }
 
   @Override
-  public Category createCategory(Category categoryToCreate) {
+  public Category createCategory(Category categoryToCreate, Integer categoryNameId,
+      Integer blogId) {
+    Blog blog = blogRepository.getReferenceById(blogId);
+    CategoryName categoryName = categoryNameRepository.getReferenceById(categoryNameId);
+
+    categoryToCreate.setBlog(blog);
+    categoryToCreate.setCategoryName(categoryName);
+
     return this.categoryRepository.save(categoryToCreate);
   }
 }
