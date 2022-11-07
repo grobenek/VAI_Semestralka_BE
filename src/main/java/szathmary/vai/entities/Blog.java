@@ -44,6 +44,9 @@ public class Blog {
   @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private List<Comment> comments = new ArrayList<>();
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "blog")
+  private List<Category> categories = new ArrayList<>();
+
   public void setComments(List<Comment> comments) {
     this.comments.retainAll(comments);
     this.comments.addAll(comments);

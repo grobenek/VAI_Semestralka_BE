@@ -31,7 +31,7 @@ public class User {
   @NotBlank
   @Column(name = "password")
   private String password;
-  @javax.validation.constraints.NotNull
+  @NotNull
   @Column(name = "is_admin")
   private Boolean isAdmin;
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
