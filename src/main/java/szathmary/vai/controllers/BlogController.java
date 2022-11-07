@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.BlogDto;
 import szathmary.vai.entities.Blog;
-import szathmary.vai.services.IBlogService;
+import szathmary.vai.services.interfaces.IBlogService;
 
 @Slf4j
 @Valid

@@ -1,10 +1,11 @@
-package szathmary.vai.services;
+package szathmary.vai.services.implementations;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import szathmary.vai.entities.CategoryName;
 import szathmary.vai.repositories.CategoryNameRepository;
+import szathmary.vai.services.interfaces.ICategoryNameService;
 
 @Service
 public class CategoryNameServiceImpl implements ICategoryNameService {

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CommentDto;
 import szathmary.vai.entities.Comment;
-import szathmary.vai.services.ICommentService;
+import szathmary.vai.services.interfaces.ICommentService;
 
 @Slf4j
 @Valid

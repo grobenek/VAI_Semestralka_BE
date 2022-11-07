@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.UserDto;
 import szathmary.vai.entities.User;
-import szathmary.vai.services.IUserService;
+import szathmary.vai.services.interfaces.IUserService;
 
 @Slf4j
 @Valid

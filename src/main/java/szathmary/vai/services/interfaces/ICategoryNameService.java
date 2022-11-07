@@ -1,4 +1,4 @@
-package szathmary.vai.services;
+package szathmary.vai.services.interfaces;
 
 import java.util.List;
 import szathmary.vai.entities.CategoryName;

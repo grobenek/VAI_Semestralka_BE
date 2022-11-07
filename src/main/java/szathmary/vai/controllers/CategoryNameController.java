@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CategoryNameDto;
 import szathmary.vai.entities.CategoryName;
-import szathmary.vai.services.CategoryNameServiceImpl;
+import szathmary.vai.services.implementations.CategoryNameServiceImpl;
 
 @Slf4j
 @Valid

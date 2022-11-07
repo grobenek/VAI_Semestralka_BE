@@ -1,4 +1,4 @@
-package szathmary.vai.services;
+package szathmary.vai.services.implementations;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import szathmary.vai.entities.User;
 import szathmary.vai.repositories.BlogRepository;
 import szathmary.vai.repositories.CommentRepository;
 import szathmary.vai.repositories.UserRepository;
+import szathmary.vai.services.interfaces.ICommentService;
 
 @Service
 public class CommentServiceImpl implements ICommentService {
