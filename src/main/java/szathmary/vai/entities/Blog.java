@@ -1,5 +1,7 @@
 package szathmary.vai.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 @Data
@@ -29,6 +32,8 @@ public class Blog {
   private Integer blogId;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @JsonBackReference
   @JoinColumn(name = "author", nullable = false)
   private User author;
 
@@ -43,13 +48,20 @@ public class Blog {
   private Timestamp timestamp;
 
   @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, orphanRemoval = true)
+  @JsonManagedReference
   private List<Category> categories = new ArrayList<>();
 
   public void setComments(List<Comment> comments) {
     this.comments.retainAll(comments);
     this.comments.addAll(comments);
+  }
+
+  public void setCategories(List<Category> categories) {
+    this.categories.retainAll(categories);
+    this.categories.addAll(categories);
   }
 }

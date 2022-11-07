@@ -1,5 +1,6 @@
 package szathmary.vai.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,12 @@ public class CategoryName {
   @Size(max = 65535, message = "CategoryName name size can be maximum of 30 characters!")
   private String name;
 
-  @OneToMany(mappedBy = "categoryName", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "categoryName", fetch = FetchType.LAZY, orphanRemoval = true)
+  @JsonManagedReference
   private List<Category> categories;
+
+  public void setCategories(List<Category> categories) {
+    this.categories.retainAll(categories);
+    this.categories.addAll(categories);
+  }
 }

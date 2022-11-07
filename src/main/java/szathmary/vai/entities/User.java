@@ -1,5 +1,6 @@
 package szathmary.vai.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -35,7 +36,19 @@ public class User {
   @Column(name = "is_admin")
   private Boolean isAdmin;
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<Blog> blogs = new ArrayList<>();
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JsonManagedReference
   private List<Comment> comments = new ArrayList<>();
+
+  public void setBlogs(List<Blog> blogs) {
+    this.blogs.retainAll(blogs);
+    this.blogs.addAll(blogs);
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments.retainAll(comments);
+    this.comments.addAll(comments);
+  }
 }

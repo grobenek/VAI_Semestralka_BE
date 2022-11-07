@@ -1,5 +1,6 @@
 package szathmary.vai.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity(name = "comments")
@@ -24,6 +26,8 @@ public class Comment {
   private Integer commentId;
   @NotNull(message = "Comment author cannot be null!")
   @ManyToOne(fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @JsonBackReference
   @JoinColumn(name = "author", nullable = false)
   private User author;
   @NotNull(message = "Comment timestamp cannot be null!")
@@ -31,6 +35,8 @@ public class Comment {
   private Timestamp timestamp;
   @NotNull(message = "Comment blog cannot be null!")
   @ManyToOne(fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @JsonBackReference
   @JoinColumn(name = "blog_id", nullable = false)
   private Blog blog;
   @NotNull(message = "Comment text cannot be null!")
