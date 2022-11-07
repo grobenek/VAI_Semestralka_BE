@@ -23,15 +23,15 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id", nullable = false)
   private Integer userId;
-  @NotNull
-  @NotBlank
+  @NotNull(message = "User login cannot be null!")
+  @NotBlank(message = "User login cannot be blank!")
   @Column(name = "login")
   private String login;
-  @NotNull
-  @NotBlank
+  @NotNull(message = "User password cannot be null!")
+  @NotBlank(message = "User password cannot be blank!")
   @Column(name = "password")
   private String password;
-  @NotNull
+  @NotNull(message = "User isAdmin cannot be null!")
   @Column(name = "is_admin")
   private Boolean isAdmin;
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

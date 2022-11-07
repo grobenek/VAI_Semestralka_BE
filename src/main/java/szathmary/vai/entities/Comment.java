@@ -21,23 +21,19 @@ public class Comment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "comment_id")
   private Integer commentId;
-
-  @NotNull
+  @NotNull(message = "Comment author cannot be null!")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author", nullable = false)
   private User author;
-
-  @NotNull
+  @NotNull(message = "Comment timestamp cannot be null!")
   @Column(name = "timestamp")
   private Timestamp timestamp;
-
-  @NotNull
+  @NotNull(message = "Comment blog cannot be null!")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "blog_id", nullable = false)
   private Blog blog;
-
-  @NotNull
-  @NotBlank
+  @NotNull(message = "Comment text cannot be null!")
+  @NotBlank(message = "Comment text cannot be blank!")
   @Column(name = "text")
   private String text;
 

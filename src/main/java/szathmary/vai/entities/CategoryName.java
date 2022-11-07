@@ -7,8 +7,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,8 +22,8 @@ public class CategoryName {
   private Integer categoryNameId;
 
   @Column(name = "name")
-  @NotNull
-  @NotBlank
+  @NotNull(message = "CategoryName name cannot be null!")
+  @NotBlank(message = "CategoryName name cannot be blank!")
   private String name;
 
   @OneToMany(fetch = FetchType.LAZY)

@@ -2,6 +2,7 @@ package szathmary.vai.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import szathmary.vai.entities.Comment;
 import szathmary.vai.services.ICommentService;
 
 @Slf4j
-@Validated
+@Valid
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {
@@ -48,7 +48,10 @@ public class CommentController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<CommentDto> getCommentById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<CommentDto> getCommentById(
+      @NotNull(message = "commentId must not be null!")
+      @Positive(message = "commentId must be positive number!")
+      @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment comment = this.commentService.getCommentById(id);
@@ -63,9 +66,14 @@ public class CommentController {
   }
 
   @RequestMapping(path = "/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.POST)
-  public ResponseEntity<CommentDto> createComment(@Validated @RequestBody Comment commentToCreate,
-      @NotNull @Positive @PathVariable Integer authorId, @NotNull @Positive @PathVariable
-  Integer blogId) {
+  public ResponseEntity<CommentDto> createComment(
+      @Valid @RequestBody Comment commentToCreate,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positive number!")
+      @PathVariable Integer authorId,
+      @NotNull(message = "blogId must not be null!")
+      @Positive(message = "blogId must be positive number!")
+      @PathVariable Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment createdComment = this.commentService.createComment(commentToCreate, authorId, blogId);
@@ -80,7 +88,10 @@ public class CommentController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<HttpStatus> deleteCommentById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteCommentById(
+      @NotNull(message = "commentId must not be null!")
+      @Positive(message = "commentId must be positive number!")
+      @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);
@@ -96,9 +107,12 @@ public class CommentController {
 
   @RequestMapping(path = "/{id}/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.PUT)
   public ResponseEntity<CommentDto> updateCommentById(@NotNull @Positive @PathVariable Integer id,
-      @Validated @RequestBody Comment commentToUpdate,
-      @NotNull @Positive @PathVariable Integer authorId,
-      @NotNull @Positive @PathVariable Integer blogId) {
+      @Valid @RequestBody Comment commentToUpdate,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positive number!") @PathVariable Integer authorId,
+      @NotNull(message = "blogId must not be null!")
+      @Positive(message = "blogId must be positive number!")
+      @PathVariable Integer blogId) {
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);

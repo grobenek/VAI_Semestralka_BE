@@ -27,17 +27,16 @@ public class Blog {
   @Column(name = "blog_id")
   private Integer blogId;
 
-  @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author", nullable = false)
   private User author;
 
-  @NotNull
-  @NotBlank
+  @NotNull(message = "Blog text cannot be null!")
+  @NotBlank(message = "Blog text cannot be blank!")
   @Column(name = "text")
   private String text;
 
-  @NotNull
+  @NotNull(message = "Blog timestamp cannot be null!")
   @Column(name = "timestamp")
   private Timestamp timestamp;
 

@@ -2,6 +2,7 @@ package szathmary.vai.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import szathmary.vai.entities.User;
 import szathmary.vai.services.IUserService;
 
 @Slf4j
-@Validated
+@Valid
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -48,7 +48,10 @@ public class UserController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<UserDto> getUserById(@PathVariable @NotNull @Positive Integer id) {
+  public ResponseEntity<UserDto> getUserById(
+      @PathVariable
+      @NotNull(message = "UserId must not be null!")
+      @Positive(message = "UserId must be positive number!") Integer id) {
     log.info("getUserById started with id {}", id);
     HttpHeaders headers = getHttpHeaders();
 
@@ -64,7 +67,7 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<UserDto> createUser(@Validated @RequestBody User userToCreate) {
+  public ResponseEntity<UserDto> createUser(@Valid @RequestBody User userToCreate) {
     HttpHeaders headers = getHttpHeaders();
 
     User createdUser = this.userService.createUser(userToCreate);
@@ -79,7 +82,10 @@ public class UserController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<HttpStatus> deleteUserById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteUserById(
+      @NotNull(message = "UserId must not be null!")
+      @Positive(message = "UserId must be positive number!")
+      @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     User foundUser = this.userService.getUserById(id);
@@ -94,8 +100,11 @@ public class UserController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.PUT)
-  public ResponseEntity<UserDto> updateUserById(@NotNull @Positive @PathVariable Integer id,
-      @Validated @RequestBody User userToUpdate) {
+  public ResponseEntity<UserDto> updateUserById(
+      @NotNull(message = "UserId must not be null!")
+      @Positive(message = "UserId must be positive number!")
+      @PathVariable Integer id,
+      @Valid @RequestBody User userToUpdate) {
     HttpHeaders headers = getHttpHeaders();
 
     User foundUser = this.userService.getUserById(id);

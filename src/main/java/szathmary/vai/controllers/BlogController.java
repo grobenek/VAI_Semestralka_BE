@@ -2,6 +2,7 @@ package szathmary.vai.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import szathmary.vai.entities.Blog;
 import szathmary.vai.services.IBlogService;
 
 @Slf4j
-@Validated
+@Valid
 @RestController
 @RequestMapping("/api/blog")
 public class BlogController {
@@ -48,7 +48,10 @@ public class BlogController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<BlogDto> getBlogById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<BlogDto> getBlogById(
+      @NotNull(message = "blogId must not be null!")
+      @Positive(message = "blogID must be positiveNumber")
+      @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog blog = this.blogService.getBlogById(id);
@@ -63,8 +66,11 @@ public class BlogController {
   }
 
   @RequestMapping(path = "/author/id/{authorId}", method = RequestMethod.POST)
-  public ResponseEntity<BlogDto> createBlog(@Validated @RequestBody Blog blogToCreate,
-      @NotNull @Positive @PathVariable Integer authorId) {
+  public ResponseEntity<BlogDto> createBlog(
+      @Valid @RequestBody Blog blogToCreate,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positiveNumber")
+      @PathVariable Integer authorId) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId);
@@ -79,7 +85,10 @@ public class BlogController {
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<HttpStatus> deleteBlogById(@NotNull @Positive @PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteBlogById(
+      @NotNull(message = "blogId must not be null!")
+      @Positive(message = "blogId must be positiveNumber")
+      @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog foundBlog = this.blogService.getBlogById(id);
@@ -93,13 +102,18 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).build();
   }
 
-  @RequestMapping(path = "{id}/author/id/{idAuthor}", method = RequestMethod.PUT)
-  public ResponseEntity<BlogDto> updateBlogById(@NotNull @Positive @PathVariable Integer id,
-      @Validated @RequestBody Blog blogToUpdate,
-      @NotNull @Positive @PathVariable Integer idAuthor) {
+  @RequestMapping(path = "{idBlog}/author/id/{idAuthor}", method = RequestMethod.PUT)
+  public ResponseEntity<BlogDto> updateBlogById(
+      @NotNull(message = "blogId must not be null!")
+      @Positive(message = "blogId must be positiveNumber")
+      @PathVariable Integer idBlog,
+      @Valid @RequestBody Blog blogToUpdate,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positiveNumber")
+      @PathVariable Integer idAuthor) {
     HttpHeaders headers = getHttpHeaders();
 
-    Blog foundBlog = this.blogService.getBlogById(id);
+    Blog foundBlog = this.blogService.getBlogById(idBlog);
 
     if (foundBlog == null) {
       return ResponseEntity.notFound().headers(headers).build();
