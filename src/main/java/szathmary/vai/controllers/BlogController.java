@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.BlogDto;
 import szathmary.vai.entities.Blog;
+import szathmary.vai.exception.ItemNotFoundException;
 import szathmary.vai.services.interfaces.IBlogService;
 
 @Slf4j
-@Valid
+@Validated
 @RestController
 @RequestMapping("/api/blog")
 public class BlogController {
@@ -57,7 +59,7 @@ public class BlogController {
     Blog blog = this.blogService.getBlogById(id);
 
     if (blog == null) {
-      return ResponseEntity.notFound().headers(headers).build();
+      throw new ItemNotFoundException("Blog with id " + id + " not found!");
     }
 
     BlogDto blogDtoToReturn = modelMapper.map(blog, BlogDto.class);
@@ -76,7 +78,7 @@ public class BlogController {
     Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId);
 
     if (createdBlog == null) {
-      return ResponseEntity.notFound().headers(headers).build();
+      throw new ItemNotFoundException("Blog with id " + blogToCreate.getBlogId() + " not found!");
     }
 
     BlogDto blogDtoToReturn = modelMapper.map(createdBlog, BlogDto.class);
@@ -94,7 +96,7 @@ public class BlogController {
     Blog foundBlog = this.blogService.getBlogById(id);
 
     if (foundBlog == null) {
-      return ResponseEntity.notFound().headers(headers).build();
+      throw new ItemNotFoundException("Blog with id " + id + " not found!");
     }
 
     this.blogService.deleteBlog(foundBlog);
@@ -116,7 +118,7 @@ public class BlogController {
     Blog foundBlog = this.blogService.getBlogById(idBlog);
 
     if (foundBlog == null) {
-      return ResponseEntity.notFound().headers(headers).build();
+      throw new ItemNotFoundException("Blog with id " + blogToUpdate.getBlogId() + " not found!");
     }
 
     BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId", "author");
