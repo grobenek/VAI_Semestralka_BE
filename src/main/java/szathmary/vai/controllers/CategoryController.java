@@ -80,8 +80,6 @@ public class CategoryController {
     return ResponseEntity.ok().headers(headers).body(categoryDtoToReturn);
   }
 
-  //TODO skontroluj controller, aj vsetky a potom exception handling
-
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
   public ResponseEntity<HttpStatus> deleteCategoryById(
       @NotNull(message = "categoryId must not be null!") @Positive(message = "categoryId must be positiveNumber") @PathVariable Integer id) {
