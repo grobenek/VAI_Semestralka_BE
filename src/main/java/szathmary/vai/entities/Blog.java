@@ -51,7 +51,7 @@ public class Blog {
   @JsonManagedReference
   private List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<Category> categories = new ArrayList<>();
 

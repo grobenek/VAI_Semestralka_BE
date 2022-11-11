@@ -4,15 +4,12 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-public class CommentDto {
+public class CommentResponseDto {
 
   private Integer commentId;
-
   private Integer authorId;
-
-  private Timestamp timestamp;
-
   private Integer blogId;
-
+  private Timestamp timestamp;
+  private Boolean isEdited;
   private String text;
 }

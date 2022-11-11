@@ -106,18 +106,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<Object> handleRuntimeException(
-      RuntimeException exception,
-      WebRequest request
-  ) {
-    log.error(exception.getMessage());
-    return handleExceptionInternal(exception,
-        findCauseOfException(exception).toString(),
-        new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-  }
-
   public static Throwable findCauseOfException(Throwable throwable) {
     log.info("Finding cause for: {}", throwable.toString());
     Objects.requireNonNull(throwable);

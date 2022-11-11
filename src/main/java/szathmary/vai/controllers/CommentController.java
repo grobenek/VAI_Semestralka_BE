@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import szathmary.vai.dtos.CommentDto;
+import szathmary.vai.dtos.CommentRequestDto;
+import szathmary.vai.dtos.CommentResponseDto;
 import szathmary.vai.entities.Comment;
+import szathmary.vai.mappings.MapAuthorToAuthorIdInComment;
 import szathmary.vai.services.interfaces.ICommentService;
 
 @Slf4j
@@ -35,21 +37,22 @@ public class CommentController {
   public CommentController(ICommentService commentService) {
     this.commentService = commentService;
     this.modelMapper = new ModelMapper();
+    this.modelMapper.addMappings(new MapAuthorToAuthorIdInComment());
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<CommentDto>> getAllComments() {
+  public ResponseEntity<List<CommentResponseDto>> getAllComments() {
     HttpHeaders headers = getHttpHeaders();
 
     List<Comment> comments = this.commentService.getAllComments();
-    List<CommentDto> commentsToReturn = comments.stream()
-        .map(x -> this.modelMapper.map(x, CommentDto.class)).collect(Collectors.toList());
+    List<CommentResponseDto> commentsToReturn = comments.stream()
+        .map(x -> this.modelMapper.map(x, CommentResponseDto.class)).collect(Collectors.toList());
 
     return ResponseEntity.ok().headers(headers).body(commentsToReturn);
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
-  public ResponseEntity<CommentDto> getCommentById(
+  public ResponseEntity<CommentResponseDto> getCommentById(
       @NotNull(message = "commentId must not be null!")
       @Positive(message = "commentId must be positive number!")
       @PathVariable Integer id) {
@@ -61,31 +64,29 @@ public class CommentController {
       return ResponseEntity.notFound().headers(headers).build();
     }
 
-    CommentDto commentToReturn = modelMapper.map(comment, CommentDto.class);
+    CommentResponseDto commentToReturn = modelMapper.map(comment, CommentResponseDto.class);
 
     return ResponseEntity.ok().headers(headers).body(commentToReturn);
   }
 
-  @RequestMapping(path = "/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.POST)
-  public ResponseEntity<CommentDto> createComment(
-      @Valid @RequestBody Comment commentToCreate,
-      @NotNull(message = "authorId must not be null!")
-      @Positive(message = "authorId must be positive number!")
-      @PathVariable Integer authorId,
-      @NotNull(message = "blogId must not be null!")
-      @Positive(message = "blogId must be positive number!")
-      @PathVariable Integer blogId) {
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<CommentResponseDto> createComment(
+      @Valid @RequestBody CommentRequestDto commentRequestDtoToCreate) {
+    log.info("createComment in CommentController started");
+
     HttpHeaders headers = getHttpHeaders();
 
-    Comment createdComment = this.commentService.createComment(commentToCreate, authorId, blogId);
+    Comment commentToCreate = modelMapper.map(commentRequestDtoToCreate,
+        Comment.class);
 
-    if (createdComment == null) {
-      return ResponseEntity.notFound().headers(headers).build();
-    }
+    Comment createdComment = this.commentService.createComment(commentToCreate);
+    log.info("createComment in CommentController commentToCreate id {}",
+        createdComment.getCommentId());
 
-    CommentDto commentDtoToReturn = modelMapper.map(createdComment, CommentDto.class);
-
-    return ResponseEntity.ok().headers(headers).body(commentDtoToReturn);
+    CommentResponseDto commentRequestDtoToReturn = modelMapper.map(createdComment,
+        CommentResponseDto.class);
+    log.info("comment created with id {}", createdComment.getCommentId());
+    return ResponseEntity.ok().headers(headers).body(commentRequestDtoToReturn);
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
@@ -106,28 +107,41 @@ public class CommentController {
     return ResponseEntity.ok().headers(headers).build();
   }
 
-  @RequestMapping(path = "/{id}/author/id/{authorId}/blog/id/{blogId}", method = RequestMethod.PUT)
-  public ResponseEntity<CommentDto> updateCommentById(@NotNull @Positive @PathVariable Integer id,
-      @Valid @RequestBody Comment commentToUpdate,
-      @NotNull(message = "authorId must not be null!")
-      @Positive(message = "authorId must be positive number!") @PathVariable Integer authorId,
-      @NotNull(message = "blogId must not be null!")
-      @Positive(message = "blogId must be positive number!")
-      @PathVariable Integer blogId) {
+  @RequestMapping(method = RequestMethod.PUT)
+  public ResponseEntity<CommentResponseDto> updateComment(
+      @Valid @RequestBody CommentRequestDto commentToUpdate) {
+    log.info("updateComment started in CommentController");
+
     HttpHeaders headers = getHttpHeaders();
 
-    Comment foundComment = this.commentService.getCommentById(id);
+    Comment commentToUpdateToSearch = modelMapper.map(commentToUpdate, Comment.class);
 
-    if (foundComment == null) {
-      return ResponseEntity.notFound().headers(headers).build();
-    }
+    log.info("Comment from CommentRequestDTO is  id: {}, authorId: {}, blogId: {}, text: {}",
+        commentToUpdateToSearch.getCommentId(), commentToUpdateToSearch.getAuthor().getUserId(),
+        commentToUpdateToSearch.getBlog().getBlogId(), commentToUpdateToSearch.getText());
 
-    BeanUtils.copyProperties(commentToUpdate, foundComment, "commentId");
+    Comment foundComment = this.commentService.getCommentById(
+        commentToUpdateToSearch.getCommentId());
 
-    this.commentService.updateComment(foundComment, authorId, blogId);
-    CommentDto CommentDtoToReturn = modelMapper.map(foundComment, CommentDto.class);
+    log.info("Founded comment to update with id {}", foundComment.getCommentId());
 
-    return ResponseEntity.ok().headers(headers).body(CommentDtoToReturn);
+    BeanUtils.copyProperties(commentToUpdateToSearch, foundComment, "commentId", "timestamp");
+
+    //set isEdited to true
+    foundComment.setIsEdited(true);
+
+    log.info(
+        "Comment that will be updated is  id: {}, authorId: {}, blogId: {}, text: {}, isEdited: {}, timestamp: {}",
+        foundComment.getCommentId(), foundComment.getAuthor().getUserId(),
+        foundComment.getBlog().getBlogId(), foundComment.getText(), foundComment.getIsEdited(),
+        foundComment.getTimestamp());
+
+    this.commentService.updateComment(foundComment);
+    CommentResponseDto commentResponseDto = modelMapper.map(foundComment,
+        CommentResponseDto.class);
+
+    log.info("updateComment ended in CommentController");
+    return ResponseEntity.ok().headers(headers).body(commentResponseDto);
   }
 
   private static HttpHeaders getHttpHeaders() {

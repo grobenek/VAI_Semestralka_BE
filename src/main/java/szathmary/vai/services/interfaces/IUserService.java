@@ -14,4 +14,6 @@ public interface IUserService {
   void deleteUser(User userToDelete);
 
   User createUser(User userToCreate);
+
+  Integer verifyLoginInformation(String email, String password);
 }

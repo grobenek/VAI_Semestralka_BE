@@ -10,13 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "comments")
 public class Comment {
 
@@ -30,9 +33,10 @@ public class Comment {
   @JsonBackReference
   @JoinColumn(name = "author", nullable = false)
   private User author;
-  @NotNull(message = "Comment timestamp cannot be null!")
   @Column(name = "timestamp")
   private Timestamp timestamp;
+  @Column(name = "is_edited")
+  private Boolean isEdited;
   @NotNull(message = "Comment blog cannot be null!")
   @ManyToOne(fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
@@ -45,4 +49,10 @@ public class Comment {
   @Column(name = "text")
   private String text;
 
+  @PreUpdate
+  public void checkIsEdited() {
+    if (!getIsEdited() || getIsEdited() == null) {
+      setIsEdited(true);
+    }
+  }
 }

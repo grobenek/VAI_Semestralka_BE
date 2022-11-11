@@ -35,6 +35,10 @@ public class User {
   @NotNull(message = "User isAdmin cannot be null!")
   @Column(name = "is_admin")
   private Boolean isAdmin;
+  @NotNull(message = "User email cannot be null!")
+  @NotBlank(message = "User email cannot be blank!")
+  @Column(name = "email")
+  private String email;
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonManagedReference
   private List<Blog> blogs = new ArrayList<>();

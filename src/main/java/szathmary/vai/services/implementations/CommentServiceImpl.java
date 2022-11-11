@@ -1,5 +1,6 @@
 package szathmary.vai.services.implementations;
 
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +38,10 @@ public class CommentServiceImpl implements ICommentService {
   }
 
   @Override
-  public void updateComment(Comment commentToUpdate, Integer authorId, Integer blogId) {
-    Blog blogToUpdate = blogRepository.getReferenceById(blogId);
-    User authorToUpdate = userRepository.getReferenceById(authorId);
+  public void updateComment(Comment commentToUpdate) {
+    Blog blogToUpdate = blogRepository.getReferenceById(commentToUpdate.getBlog().getBlogId());
+    User authorToUpdate = userRepository.getReferenceById(
+        commentToUpdate.getAuthor().getUserId());
 
     commentToUpdate.setBlog(blogToUpdate);
     commentToUpdate.setAuthor(authorToUpdate);
@@ -53,10 +55,12 @@ public class CommentServiceImpl implements ICommentService {
   }
 
   @Override
-  public Comment createComment(Comment blogToCreate, Integer authorId, Integer blogId) {
-    User author = userRepository.getReferenceById(authorId);
-    Blog blog = blogRepository.getReferenceById(blogId);
+  public Comment createComment(Comment blogToCreate) {
+    User author = userRepository.getReferenceById(blogToCreate.getAuthor().getUserId());
+    Blog blog = blogRepository.getReferenceById(blogToCreate.getBlog().getBlogId());
 
+    blogToCreate.setIsEdited(true);
+    blogToCreate.setTimestamp(new Timestamp(System.currentTimeMillis()));
     blogToCreate.setAuthor(author);
     blogToCreate.setBlog(blog);
 

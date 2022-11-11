@@ -9,9 +9,9 @@ public interface ICommentService {
 
   Comment getCommentById(Integer id);
 
-  void updateComment(Comment blogToUpdate, Integer authorId, Integer blogId);
+  void updateComment(Comment blogToUpdate);
 
   void deleteComment(Comment blogToDelete);
 
-  Comment createComment(Comment blogToCreate, Integer authorId, Integer blogId);
+  Comment createComment(Comment blogToCreate);
 }

@@ -46,4 +46,9 @@ public class UserServiceImpl implements IUserService {
   public User createUser(User userToCreate) {
     return this.userRepository.save(userToCreate);
   }
+
+  @Override
+  public Integer verifyLoginInformation(String login, String password) {
+    return this.userRepository.getUserByLoginAndPassword(login, password).getUserId();
+  }
 }

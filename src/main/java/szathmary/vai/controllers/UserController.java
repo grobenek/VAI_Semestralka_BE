@@ -3,6 +3,7 @@ package szathmary.vai.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,19 @@ public class UserController {
         .collect(Collectors.toList());
 
     return ResponseEntity.ok().headers(headers).body(usersToReturn);
+  }
+
+  @RequestMapping(path = "verify/login/{login}/password/{password}", method = RequestMethod.GET)
+  public ResponseEntity<Integer> verifyLoginInformation(
+      @NotNull @NotBlank @PathVariable String login,
+      @NotNull @NotBlank @PathVariable String password) {
+    log.info("verifyLoginInformation started with email {} and password {}", login, password);
+
+    Integer userId = this.userService.verifyLoginInformation(login, password);
+
+    log.info("Returned user with id {}", userId);
+    return ResponseEntity.ok().headers(new HttpHeaders())
+        .body(userId);
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
