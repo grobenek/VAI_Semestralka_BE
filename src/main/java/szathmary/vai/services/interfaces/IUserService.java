@@ -15,5 +15,5 @@ public interface IUserService {
 
   User createUser(User userToCreate);
 
-  Integer verifyLoginInformation(String email, String password);
+  User getUserByEmail(String email);
 }

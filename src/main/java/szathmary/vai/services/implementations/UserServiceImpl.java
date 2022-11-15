@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
   }
 
   @Override
-  public Integer verifyLoginInformation(String login, String password) {
-    return this.userRepository.getUserByLoginAndPassword(login, password).getUserId();
+  public User getUserByEmail(String email) {
+    return this.userRepository.getUserByEmail(email);
   }
 }

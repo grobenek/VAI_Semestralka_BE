@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.UserDto;
+import szathmary.vai.dtos.UserDtoWithPassword;
 import szathmary.vai.entities.User;
+import szathmary.vai.exception.ItemNotFoundException;
 import szathmary.vai.services.interfaces.IUserService;
 
 @Slf4j
@@ -49,17 +51,24 @@ public class UserController {
     return ResponseEntity.ok().headers(headers).body(usersToReturn);
   }
 
-  @RequestMapping(path = "verify/login/{login}/password/{password}", method = RequestMethod.GET)
-  public ResponseEntity<Integer> verifyLoginInformation(
-      @NotNull @NotBlank @PathVariable String login,
-      @NotNull @NotBlank @PathVariable String password) {
-    log.info("verifyLoginInformation started with email {} and password {}", login, password);
+  @RequestMapping(path = "verify/email/{email}", method = RequestMethod.GET)
+  public ResponseEntity<UserDtoWithPassword> getUserByEmail(
+      @NotNull @NotBlank @PathVariable String email) {
+    log.info("verifyLoginInformation started with email {}", email);
 
-    Integer userId = this.userService.verifyLoginInformation(login, password);
+    User foundUser = this.userService.getUserByEmail(email);
 
-    log.info("Returned user with id {}", userId);
+    if (foundUser == null) {
+      throw new ItemNotFoundException("user with email " + email + " not found!");
+    }
+
+    UserDtoWithPassword userDtoWithPasswordToReturn = modelMapper.map(foundUser,
+        UserDtoWithPassword.class);
+
+    log.info("Returned user with userId {} and password {}",
+        userDtoWithPasswordToReturn.getUserId(), userDtoWithPasswordToReturn.getPassword());
     return ResponseEntity.ok().headers(new HttpHeaders())
-        .body(userId);
+        .body(userDtoWithPasswordToReturn);
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)

@@ -13,10 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @SuppressWarnings("com.haulmont.jpb.LombokDataInspection")
-@Data
+@Getter
+@Setter
 @Entity(name = "users")
 public class User {
 

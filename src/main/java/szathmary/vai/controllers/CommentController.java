@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CommentRequestDto;
 import szathmary.vai.dtos.CommentResponseDto;
 import szathmary.vai.entities.Comment;
-import szathmary.vai.mappings.MapAuthorToAuthorIdInComment;
+import szathmary.vai.mappings.mapAuthorIdInCommentRequestDtoToAuthorInComment;
 import szathmary.vai.services.interfaces.ICommentService;
 
 @Slf4j
@@ -37,7 +37,7 @@ public class CommentController {
   public CommentController(ICommentService commentService) {
     this.commentService = commentService;
     this.modelMapper = new ModelMapper();
-    this.modelMapper.addMappings(new MapAuthorToAuthorIdInComment());
+    this.modelMapper.addMappings(new mapAuthorIdInCommentRequestDtoToAuthorInComment());
   }
 
   @RequestMapping(method = RequestMethod.GET)
@@ -94,6 +94,7 @@ public class CommentController {
       @NotNull(message = "commentId must not be null!")
       @Positive(message = "commentId must be positive number!")
       @PathVariable Integer id) {
+    log.info("deleteCommentById started in CommentController");
     HttpHeaders headers = getHttpHeaders();
 
     Comment foundComment = this.commentService.getCommentById(id);
@@ -103,6 +104,8 @@ public class CommentController {
     }
 
     this.commentService.deleteComment(foundComment);
+
+    log.info("comment with id {} deleted", foundComment.getCommentId());
 
     return ResponseEntity.ok().headers(headers).build();
   }

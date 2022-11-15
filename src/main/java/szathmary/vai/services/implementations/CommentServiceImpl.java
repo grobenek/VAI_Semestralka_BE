@@ -59,7 +59,7 @@ public class CommentServiceImpl implements ICommentService {
     User author = userRepository.getReferenceById(blogToCreate.getAuthor().getUserId());
     Blog blog = blogRepository.getReferenceById(blogToCreate.getBlog().getBlogId());
 
-    blogToCreate.setIsEdited(true);
+    blogToCreate.setIsEdited(false);
     blogToCreate.setTimestamp(new Timestamp(System.currentTimeMillis()));
     blogToCreate.setAuthor(author);
     blogToCreate.setBlog(blog);
