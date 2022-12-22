@@ -1,6 +1,7 @@
 package szathmary.vai.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ public class CategoryName {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryNameId")
   @Column(name = "category_name_id", nullable = false)
   private Integer categoryNameId;
 
@@ -30,7 +32,6 @@ public class CategoryName {
   private String name;
 
   @OneToMany(mappedBy = "categoryName", fetch = FetchType.LAZY, orphanRemoval = true)
-  @JsonManagedReference
   private List<Category> categories;
 
   public void setCategories(List<Category> categories) {

@@ -1,6 +1,7 @@
 package szathmary.vai.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity(name = "categories")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryId")
 public class Category {
 
   @Id
@@ -22,13 +24,11 @@ public class Category {
   private Integer categoryId;
   @ManyToOne(fetch = FetchType.EAGER)
   @EqualsAndHashCode.Exclude
-  @JsonBackReference
   @JoinColumn(name = "category_name_blog_id")
   private Blog blog;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @EqualsAndHashCode.Exclude
-  @JsonBackReference
   @JoinColumn(name = "category_name_id")
   private CategoryName categoryName;
 }

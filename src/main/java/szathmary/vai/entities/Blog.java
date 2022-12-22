@@ -1,7 +1,7 @@
 package szathmary.vai.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "blogs")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "blogId")
 public class Blog {
 
   @Id
@@ -35,7 +36,6 @@ public class Blog {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
-  @JsonBackReference
   @JoinColumn(name = "author", nullable = false)
   private User author;
 
@@ -50,11 +50,9 @@ public class Blog {
   private Timestamp timestamp;
 
   @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonManagedReference
   private List<Comment> comments = new ArrayList<>();
 
   @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-  @JsonManagedReference
   private List<Category> categories = new ArrayList<>();
 
   public void setComments(List<Comment> comments) {
