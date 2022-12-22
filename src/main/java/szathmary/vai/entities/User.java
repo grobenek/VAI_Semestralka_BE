@@ -1,6 +1,7 @@
 package szathmary.vai.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
 public class User {
 
   @Id
@@ -42,10 +44,8 @@ public class User {
   @Column(name = "email")
   private String email;
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonManagedReference
   private List<Blog> blogs = new ArrayList<>();
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonManagedReference
   private List<Comment> comments = new ArrayList<>();
 
   public void setBlogs(List<Blog> blogs) {

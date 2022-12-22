@@ -102,6 +102,7 @@ public class UserController {
 
     UserDto userDtoToReturn = modelMapper.map(createdUser, UserDto.class);
 
+    log.info("Created user with id {}", createdUser.getUserId());
     return ResponseEntity.ok().headers(headers).body(userDtoToReturn);
   }
 

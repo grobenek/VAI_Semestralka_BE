@@ -1,6 +1,7 @@
 package szathmary.vai.exception_handler;
 
 import java.util.Objects;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
@@ -101,6 +102,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       WebRequest request
   ) {
     log.error(exception.getMessage());
+    return handleExceptionInternal(exception,
+        findCauseOfException(exception).toString(),
+        new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException exception,
+      WebRequest request) {
+    // return a response with the appropriate status code and error response
     return handleExceptionInternal(exception,
         findCauseOfException(exception).toString(),
         new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
