@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CommentRequestDto;
 import szathmary.vai.dtos.CommentResponseDto;
 import szathmary.vai.entities.Comment;
+import szathmary.vai.exception.ItemNotFoundException;
 import szathmary.vai.mappings.mapAuthorIdInCommentRequestDtoToAuthorInComment;
 import szathmary.vai.services.interfaces.ICommentService;
 
@@ -67,6 +68,31 @@ public class CommentController {
     CommentResponseDto commentToReturn = modelMapper.map(comment, CommentResponseDto.class);
 
     return ResponseEntity.ok().headers(headers).body(commentToReturn);
+  }
+
+  @RequestMapping(path = "blog/{blogId}", method = RequestMethod.GET)
+  public ResponseEntity<List<CommentResponseDto>> getAllCommentsByBlogId(
+      @NotNull(message = "blogtId must not be null!")
+      @Positive(message = "blogtId must be positive number!")
+      @PathVariable Integer blogId
+  ) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    log.info("All comments with blogId {} requested", blogId);
+
+    List<Comment> comments = this.commentService.getAllCommentsByBlogId(blogId);
+
+    if (comments.isEmpty()) {
+      throw new ItemNotFoundException("No comments were found for blogId " + blogId);
+    }
+
+    List<CommentResponseDto> commentResponseDtoListToReturn = comments.stream()
+        .map(comment -> this.modelMapper.map(comment, CommentResponseDto.class)).collect(
+            Collectors.toList());
+
+    log.info("{} comments with blogId {} returned", commentResponseDtoListToReturn.size(), blogId);
+
+    return ResponseEntity.ok().headers(httpHeaders).body(commentResponseDtoListToReturn);
   }
 
   @RequestMapping(method = RequestMethod.POST)

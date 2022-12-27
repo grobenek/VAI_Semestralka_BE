@@ -13,5 +13,7 @@ public interface ICommentService {
 
   void deleteComment(Comment blogToDelete);
 
+  List<Comment> getAllCommentsByBlogId(Integer id);
+
   Comment createComment(Comment blogToCreate);
 }

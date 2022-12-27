@@ -55,6 +55,11 @@ public class CommentServiceImpl implements ICommentService {
   }
 
   @Override
+  public List<Comment> getAllCommentsByBlogId(Integer blogId) {
+    return this.commentRepository.getCommentsByBlogBlogId(blogId);
+  }
+
+  @Override
   public Comment createComment(Comment blogToCreate) {
     User author = userRepository.getReferenceById(blogToCreate.getAuthor().getUserId());
     Blog blog = blogRepository.getReferenceById(blogToCreate.getBlog().getBlogId());
