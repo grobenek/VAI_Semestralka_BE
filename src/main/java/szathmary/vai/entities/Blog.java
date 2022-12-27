@@ -49,6 +49,11 @@ public class Blog {
   @Column(name = "timestamp")
   private Timestamp timestamp;
 
+  @ManyToOne
+  @JoinColumn(name = "picture_id")
+  private Picture picture;
+  ;
+
   @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private List<Comment> comments = new ArrayList<>();
 

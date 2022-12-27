@@ -1,13 +1,14 @@
 package szathmary.vai.dtos;
 
-import lombok.Data;
-
 import java.sql.Timestamp;
+import lombok.Data;
 
 @Data
 public class BlogDto {
-    private Integer blogId;
-    private Integer authorId;
-    private String text;
-    private Timestamp timestamp;
+
+  private Integer blogId;
+  private Integer authorId;
+  private Integer pictureId;
+  private String text;
+  private Timestamp timestamp;
 }

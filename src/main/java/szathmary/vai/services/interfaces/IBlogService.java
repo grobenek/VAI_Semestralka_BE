@@ -9,9 +9,9 @@ public interface IBlogService {
 
   Blog getBlogById(Integer id);
 
-  Blog updateBlog(Blog blogToUpdate, Integer authorId);
+  Blog updateBlog(Blog blogToUpdate, Integer authorId, Integer pictureId);
 
   void deleteBlog(Blog blogToDelete);
 
-  Blog createBlog(Blog blogToCreate, Integer authorId);
+  Blog createBlog(Blog blogToCreate, Integer authorId, Integer pictureId);
 }

@@ -56,6 +56,7 @@ public class BlogController {
       @PathVariable Integer id) {
     HttpHeaders headers = getHttpHeaders();
 
+    log.info("Getting blog with id {}", id);
     Blog blog = this.blogService.getBlogById(id);
 
     if (blog == null) {
@@ -64,18 +65,21 @@ public class BlogController {
 
     BlogDto blogDtoToReturn = modelMapper.map(blog, BlogDto.class);
 
+    log.info("blog with id {} returned", blogDtoToReturn.getBlogId());
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
   }
 
-  @RequestMapping(path = "/author/id/{authorId}", method = RequestMethod.POST)
+  @RequestMapping(path = "/author/id/{authorId}/{pictureId}", method = RequestMethod.POST)
   public ResponseEntity<BlogDto> createBlog(
       @Valid @RequestBody Blog blogToCreate,
       @NotNull(message = "authorId must not be null!")
       @Positive(message = "authorId must be positiveNumber")
-      @PathVariable Integer authorId) {
+      @PathVariable Integer authorId,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positiveNumber") @PathVariable Integer pictureId) {
     HttpHeaders headers = getHttpHeaders();
 
-    Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId);
+    Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId, pictureId);
 
     if (createdBlog == null) {
       throw new ItemNotFoundException("Blog with id " + blogToCreate.getBlogId() + " not found!");
@@ -104,7 +108,7 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).build();
   }
 
-  @RequestMapping(path = "{idBlog}/author/id/{idAuthor}", method = RequestMethod.PUT)
+  @RequestMapping(path = "{idBlog}/author/id/{idAuthor}/picture/id/{idPicture}", method = RequestMethod.PUT)
   public ResponseEntity<BlogDto> updateBlogById(
       @NotNull(message = "blogId must not be null!")
       @Positive(message = "blogId must be positiveNumber")
@@ -112,7 +116,10 @@ public class BlogController {
       @Valid @RequestBody Blog blogToUpdate,
       @NotNull(message = "authorId must not be null!")
       @Positive(message = "authorId must be positiveNumber")
-      @PathVariable Integer idAuthor) {
+      @PathVariable Integer idAuthor,
+      @NotNull(message = "authorId must not be null!")
+      @Positive(message = "authorId must be positiveNumber")
+      @PathVariable Integer idPicture) {
     HttpHeaders headers = getHttpHeaders();
 
     Blog foundBlog = this.blogService.getBlogById(idBlog);
@@ -121,9 +128,9 @@ public class BlogController {
       throw new ItemNotFoundException("Blog with id " + blogToUpdate.getBlogId() + " not found!");
     }
 
-    BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId", "author");
+    BeanUtils.copyProperties(blogToUpdate, foundBlog, "blogId", "author", "picture");
 
-    this.blogService.updateBlog(foundBlog, idAuthor);
+    this.blogService.updateBlog(foundBlog, idAuthor, idPicture);
     BlogDto blogDtoToReturn = modelMapper.map(foundBlog, BlogDto.class);
 
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
