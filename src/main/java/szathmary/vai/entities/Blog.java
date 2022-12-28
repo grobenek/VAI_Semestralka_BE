@@ -39,6 +39,12 @@ public class Blog {
   @JoinColumn(name = "author", nullable = false)
   private User author;
 
+  @NotNull(message = "Blog title cannot be null!")
+  @NotBlank(message = "Blog title cannot be blank!")
+  @Size(max = 100, message = "Blog title size can be maximum of 100 characters!")
+  @Column(name = "title")
+  private String title;
+
   @NotNull(message = "Blog text cannot be null!")
   @NotBlank(message = "Blog text cannot be blank!")
   @Size(max = 65535, message = "Blog text size can be maximum of 65535 characters!")

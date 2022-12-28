@@ -42,12 +42,19 @@ public class BlogController {
   public ResponseEntity<List<BlogDto>> getAllBlogs() {
     HttpHeaders headers = getHttpHeaders();
 
+    log.info("GetAllBlogs requested");
+
     List<Blog> blogs = this.blogService.getAllBlogs();
     List<BlogDto> blogsToReturn = blogs.stream().map(x -> this.modelMapper.map(x, BlogDto.class))
         .collect(Collectors.toList());
 
+    log.info("List of {} blogs returned", blogsToReturn.size());
+
     return ResponseEntity.ok().headers(headers).body(blogsToReturn);
   }
+
+  //TODO spravit metodu, ktora vrati vsetky blogy s danou kategoriou
+  // TODO pridat KATEGORIU DO BLOG TABULKY
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
   public ResponseEntity<BlogDto> getBlogById(
