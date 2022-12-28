@@ -53,8 +53,30 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).body(blogsToReturn);
   }
 
-  //TODO spravit metodu, ktora vrati vsetky blogy s danou kategoriou
-  // TODO pridat KATEGORIU DO BLOG TABULKY
+  @RequestMapping(path = "category/{categoryId}", method = RequestMethod.GET)
+  public ResponseEntity<List<BlogDto>> getBlogsByCategoriesCategoryId(
+      @NotNull(message = "categoryId must not be null!")
+      @Positive(message = "categoryId must be positiveNumber")
+      @PathVariable Integer categoryId
+  ) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    log.info("List of blogs with categoryId {} requested", categoryId);
+
+    List<Blog> blogs = this.blogService.getBlogsByCategoriesCategoryId(categoryId);
+
+    if (blogs.isEmpty()) {
+      throw new ItemNotFoundException("No blogs with categoryId " + categoryId + " were found!");
+    }
+
+    List<BlogDto> blogDtoListToReturn = blogs.stream()
+        .map(blog -> this.modelMapper.map(blog, BlogDto.class)).collect(
+            Collectors.toList());
+
+    log.info("List of {} blogs returned", blogDtoListToReturn.size());
+
+    return ResponseEntity.ok().headers(httpHeaders).body(blogDtoListToReturn);
+  }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
   public ResponseEntity<BlogDto> getBlogById(

@@ -9,6 +9,6 @@ public class CategoryDto {
 
   private Integer blogId;
 
-  private Integer categoryNameId;
+  private String cagtegoryName;
 
 }

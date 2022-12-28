@@ -14,4 +14,6 @@ public interface IBlogService {
   void deleteBlog(Blog blogToDelete);
 
   Blog createBlog(Blog blogToCreate, Integer authorId, Integer pictureId);
+
+  List<Blog> getBlogsByCategoriesCategoryId(Integer categoryId);
 }

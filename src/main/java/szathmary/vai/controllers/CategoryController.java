@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CategoryDto;
 import szathmary.vai.entities.Category;
 import szathmary.vai.exception.ItemNotFoundException;
+import szathmary.vai.services.interfaces.ICategoryNameService;
 import szathmary.vai.services.interfaces.ICategoryService;
 
 @Slf4j
@@ -28,11 +29,15 @@ public class CategoryController {
 
   private final ICategoryService categoryService;
 
+  private final ICategoryNameService categoryNameService;
+
   private final ModelMapper modelMapper;
 
   @Autowired
-  public CategoryController(ICategoryService categoryService) {
+  public CategoryController(ICategoryService categoryService,
+      ICategoryNameService categoryNameService) {
     this.categoryService = categoryService;
+    this.categoryNameService = categoryNameService;
     this.modelMapper = new ModelMapper();
   }
 
@@ -47,7 +52,7 @@ public class CategoryController {
     return ResponseEntity.ok().headers(headers).body(categoryDtosToReturn);
   }
 
-  @RequestMapping(path = "blog/{blogId}")
+  @RequestMapping(path = "blog/{blogId}", method = RequestMethod.GET)
   public ResponseEntity<List<CategoryDto>> getCategoriesByBlogId(
       @NotNull(message = "CategoryId cannot be null!")
       @Positive(message = "CategoryId must be positive number!")
@@ -64,12 +69,21 @@ public class CategoryController {
     }
 
     List<CategoryDto> categoryDtoListToReturn = categories.stream()
-        .map(category -> this.modelMapper.map(category, CategoryDto.class)).collect(
-            Collectors.toList());
+        .map(category -> {
+          CategoryDto categoryDto = this.modelMapper.map(category, CategoryDto.class);
+          categoryDto.setCagtegoryName(this.categoryNameService.getCategoryNameById(
+              category.getCategoryName().getCategoryNameId()).getName());
+          return categoryDto;
+        }).collect(Collectors.toList());
 
     log.info("List of {} categories returned", categoryDtoListToReturn.size());
 
-    return ResponseEntity.ok().headers(httpHeaders).body(categoryDtoListToReturn);
+    return ResponseEntity.ok().
+
+        headers(httpHeaders).
+
+        body(categoryDtoListToReturn);
+
   }
 
   @RequestMapping(path = "/{id}")
