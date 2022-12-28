@@ -9,6 +9,8 @@ public interface ICategoryService {
 
   Category getCategoryById(Integer id);
 
+  List<Category> getCategoriesByBlogId(Integer blogId);
+
   void updateCategory(Category categoryToUpdate, Integer categoryNameId, Integer blogId);
 
   void deleteCategory(Category categoryToDelete);

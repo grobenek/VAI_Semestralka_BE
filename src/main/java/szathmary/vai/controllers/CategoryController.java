@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import szathmary.vai.dtos.CategoryDto;
 import szathmary.vai.entities.Category;
+import szathmary.vai.exception.ItemNotFoundException;
 import szathmary.vai.services.interfaces.ICategoryService;
 
 @Slf4j
@@ -44,6 +45,31 @@ public class CategoryController {
         .map(x -> this.modelMapper.map(x, CategoryDto.class)).collect(Collectors.toList());
 
     return ResponseEntity.ok().headers(headers).body(categoryDtosToReturn);
+  }
+
+  @RequestMapping(path = "blog/{blogId}")
+  public ResponseEntity<List<CategoryDto>> getCategoriesByBlogId(
+      @NotNull(message = "CategoryId cannot be null!")
+      @Positive(message = "CategoryId must be positive number!")
+      @PathVariable Integer blogId
+  ) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    log.info("List af all categories with blogId {} requested", blogId);
+
+    List<Category> categories = this.categoryService.getCategoriesByBlogId(blogId);
+
+    if (categories.isEmpty()) {
+      throw new ItemNotFoundException("No categories with blogId " + blogId + " were found!");
+    }
+
+    List<CategoryDto> categoryDtoListToReturn = categories.stream()
+        .map(category -> this.modelMapper.map(category, CategoryDto.class)).collect(
+            Collectors.toList());
+
+    log.info("List of {} categories returned", categoryDtoListToReturn.size());
+
+    return ResponseEntity.ok().headers(httpHeaders).body(categoryDtoListToReturn);
   }
 
   @RequestMapping(path = "/{id}")

@@ -39,6 +39,11 @@ public class CategoryServiceImpl implements ICategoryService {
   }
 
   @Override
+  public List<Category> getCategoriesByBlogId(Integer blogId) {
+    return this.categoryRepository.getCategoriesByBlogBlogId(blogId);
+  }
+
+  @Override
   public void updateCategory(Category categoryToUpdate, Integer categoryNameId, Integer blogId) {
     Blog blog = blogRepository.getReferenceById(blogId);
     CategoryName categoryName = categoryNameRepository.getReferenceById(categoryNameId);
