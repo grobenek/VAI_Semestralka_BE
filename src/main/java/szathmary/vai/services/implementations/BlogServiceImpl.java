@@ -71,4 +71,9 @@ public class BlogServiceImpl implements IBlogService {
   public List<Blog> getBlogsByCategoriesCategoryId(Integer categoryId) {
     return this.blogRepository.getBlogsByCategoriesCategoryNameCategoryNameId(categoryId);
   }
+
+  @Override
+  public List<Blog> getBlogsByAuthorUserId(Integer userId) {
+    return this.blogRepository.getBlogsByAuthorUserId(userId);
+  }
 }

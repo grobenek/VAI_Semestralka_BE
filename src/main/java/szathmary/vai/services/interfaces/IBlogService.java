@@ -16,4 +16,6 @@ public interface IBlogService {
   Blog createBlog(Blog blogToCreate, Integer authorId, Integer pictureId);
 
   List<Blog> getBlogsByCategoriesCategoryId(Integer categoryId);
+
+  List<Blog> getBlogsByAuthorUserId(Integer userId);
 }

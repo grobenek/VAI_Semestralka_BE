@@ -71,7 +71,7 @@ public class CategoryController {
     List<CategoryDto> categoryDtoListToReturn = categories.stream()
         .map(category -> {
           CategoryDto categoryDto = this.modelMapper.map(category, CategoryDto.class);
-          categoryDto.setCagtegoryName(this.categoryNameService.getCategoryNameById(
+          categoryDto.setCategoryName(this.categoryNameService.getCategoryNameById(
               category.getCategoryName().getCategoryNameId()).getName());
           return categoryDto;
         }).collect(Collectors.toList());

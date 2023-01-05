@@ -24,7 +24,7 @@ public class Category {
   private Integer categoryId;
   @ManyToOne(fetch = FetchType.EAGER)
   @EqualsAndHashCode.Exclude
-  @JoinColumn(name = "category_name_blog_id")
+  @JoinColumn(name = "category_blog_id")
   private Blog blog;
 
   @ManyToOne(fetch = FetchType.EAGER)

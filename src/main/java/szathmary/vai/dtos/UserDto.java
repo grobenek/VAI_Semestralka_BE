@@ -9,4 +9,5 @@ public class UserDto {
   private String login;
   private Boolean isAdmin;
   private String email;
+  private String aboutUser;
 }

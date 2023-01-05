@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +44,13 @@ public class User {
   @NotBlank(message = "User email cannot be blank!")
   @Column(name = "email")
   private String email;
+
+  @NotNull(message = "About user text cannot be null!")
+  @NotBlank(message = "About user text cannot be blank!")
+  @Size(max = 200, message = "About user text must be maximum of 200 characters!")
+  @Column(name = "about_user")
+  private String aboutUser;
+
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private List<Blog> blogs = new ArrayList<>();
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

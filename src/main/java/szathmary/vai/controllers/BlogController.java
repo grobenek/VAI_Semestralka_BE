@@ -53,6 +53,31 @@ public class BlogController {
     return ResponseEntity.ok().headers(headers).body(blogsToReturn);
   }
 
+  @RequestMapping(path = "user/{userId}", method = RequestMethod.GET)
+  public ResponseEntity<List<BlogDto>> getBlogsByAuthorUserId(
+      @NotNull(message = "userId must not be null!")
+      @Positive(message = "userId must be positiveNumber")
+      @PathVariable Integer userId
+  ) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    log.info("List of blogs with userId {} requested", userId);
+
+    List<Blog> blogs = this.blogService.getBlogsByAuthorUserId(userId);
+
+    if (blogs.isEmpty()) {
+      throw new ItemNotFoundException("No blogs with userId " + userId + " were found!");
+    }
+
+    List<BlogDto> blogDtoListToReturn = blogs.stream()
+        .map(blog -> this.modelMapper.map(blog, BlogDto.class)).collect(
+            Collectors.toList());
+
+    log.info("List of {} blogs returned", blogDtoListToReturn.size());
+
+    return ResponseEntity.ok().headers(httpHeaders).body(blogDtoListToReturn);
+  }
+
   @RequestMapping(path = "category/{categoryId}", method = RequestMethod.GET)
   public ResponseEntity<List<BlogDto>> getBlogsByCategoriesCategoryId(
       @NotNull(message = "categoryId must not be null!")
