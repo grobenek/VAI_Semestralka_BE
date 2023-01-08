@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -64,5 +65,11 @@ public class User {
   public void setComments(List<Comment> comments) {
     this.comments.retainAll(comments);
     this.comments.addAll(comments);
+  }
+
+  @PreRemove
+  private void preRemove() {
+    this.blogs.forEach(blog -> blog.setAuthor(null));
+    this.comments.forEach(comment -> comment.setAuthor(null));
   }
 }

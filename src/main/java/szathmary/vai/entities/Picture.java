@@ -24,8 +24,9 @@ public class Picture {
   private Integer pictureId;
 
   @NotNull(message = "Picture data cannot be null!")
+  @NotBlank(message = "Picture data cannot be blank!")
   @Column(name = "data")
-  private byte[] data;
+  private String data;
 
   @NotNull(message = "Picture file_name cannot be null!")
   @NotBlank(message = "Picture file_name cannot be blank!")

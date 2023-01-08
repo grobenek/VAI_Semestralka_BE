@@ -7,5 +7,6 @@ public class UserDtoWithPassword {
 
   private String password;
   private Integer userId;
+  private Boolean isAdmin;
 
 }

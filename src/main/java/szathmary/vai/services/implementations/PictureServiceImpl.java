@@ -4,8 +4,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import szathmary.vai.entities.Picture;
+import szathmary.vai.exception.ImageIsNotValidException;
 import szathmary.vai.repositories.PictureRepository;
 import szathmary.vai.services.interfaces.IPictureService;
+import szathmary.vai.validators.Base64ImageValidator;
 
 @Service
 public class PictureServiceImpl implements IPictureService {
@@ -38,6 +40,12 @@ public class PictureServiceImpl implements IPictureService {
 
   @Override
   public Picture createPicture(Picture pictureToCreate) {
-    return this.pictureRepository.save(pictureToCreate);
+
+    if (Base64ImageValidator.isValidImage(pictureToCreate.getData())) {
+      return this.pictureRepository.save(pictureToCreate);
+    }
+
+    throw new ImageIsNotValidException(
+        "Image with file name " + pictureToCreate.getFileName() + " is not valid base64 image!");
   }
 }

@@ -90,9 +90,31 @@ public class UserController {
     return ResponseEntity.ok().headers(headers).body(userToReturn);
   }
 
+  @RequestMapping(path = "isAdmin/{id}", method = RequestMethod.GET)
+  public ResponseEntity<Boolean> isUserAdmin(
+      @PathVariable
+      @NotNull(message = "UserId must not be null!")
+      @Positive(message = "UserId must be positive number!") Integer id) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    User user = this.userService.getUserById(id);
+
+    if (user == null) {
+      return ResponseEntity.notFound().headers(httpHeaders).build();
+    }
+
+    if (user.getIsAdmin()) {
+      return ResponseEntity.ok().headers(httpHeaders).body(Boolean.TRUE);
+    } else {
+      return ResponseEntity.ok().headers(httpHeaders).body(Boolean.FALSE);
+    }
+  }
+
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<UserDto> createUser(@Valid @RequestBody User userToCreate) {
     HttpHeaders headers = getHttpHeaders();
+
+    log.info("Request to create user accepted");
 
     User createdUser = this.userService.createUser(userToCreate);
 

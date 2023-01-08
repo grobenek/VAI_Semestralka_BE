@@ -1,5 +1,6 @@
 package szathmary.vai.controllers;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +26,6 @@ import szathmary.vai.services.interfaces.IPictureService;
 @RequestMapping("/api/picture")
 public class PictureController {
 
-  private final PictureRepository pictureRepository;
-
   private final IPictureService pictureService;
 
   private final ModelMapper modelMapper;
@@ -35,7 +35,6 @@ public class PictureController {
       PictureRepository pictureRepository) {
     this.pictureService = pictureService;
     this.modelMapper = new ModelMapper();
-    this.pictureRepository = pictureRepository;
   }
 
   @RequestMapping(path = "{id}", method = RequestMethod.GET)
@@ -60,6 +59,25 @@ public class PictureController {
     log.info("Picture with id {} and filename {} returned", pictureDtoToReturn.getPictureId(),
         pictureDtoToReturn.getFileName());
     return ResponseEntity.ok().headers(headers).body(pictureDtoToReturn);
+  }
+
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<PictureDto> createPicture(
+      @Valid @RequestBody Picture picture
+  ) {
+    HttpHeaders httpHeaders = getHttpHeaders();
+
+    Picture createdPicture = this.pictureService.createPicture(picture);
+
+    if (createdPicture == null) {
+      throw new ItemNotFoundException("Picture with id " + picture.getPictureId() + " not found!");
+    }
+
+    log.info("Picture with id {} created!", createdPicture.getPictureId());
+
+    PictureDto pictureDtoToReturn = this.modelMapper.map(createdPicture, PictureDto.class);
+
+    return ResponseEntity.ok().headers(httpHeaders).body(pictureDtoToReturn);
   }
 
   private static HttpHeaders getHttpHeaders() {

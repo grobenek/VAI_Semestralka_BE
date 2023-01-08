@@ -139,6 +139,8 @@ public class BlogController {
       throw new ItemNotFoundException("Blog with id " + blogToCreate.getBlogId() + " not found!");
     }
 
+    log.info("Blog with id {} created!", createdBlog.getBlogId());
+
     BlogDto blogDtoToReturn = modelMapper.map(createdBlog, BlogDto.class);
 
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);

@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -74,5 +75,10 @@ public class Blog {
   public void setCategories(List<Category> categories) {
     this.categories.retainAll(categories);
     this.categories.addAll(categories);
+  }
+
+  @PreRemove
+  private void preRemove() {
+    this.comments.forEach(comment -> comment.setBlog(null));
   }
 }
