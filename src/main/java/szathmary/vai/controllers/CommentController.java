@@ -49,6 +49,7 @@ public class CommentController {
     List<CommentResponseDto> commentsToReturn = comments.stream()
         .map(x -> this.modelMapper.map(x, CommentResponseDto.class)).collect(Collectors.toList());
 
+    log.info("All comments returned");
     return ResponseEntity.ok().headers(headers).body(commentsToReturn);
   }
 
@@ -67,6 +68,7 @@ public class CommentController {
 
     CommentResponseDto commentToReturn = modelMapper.map(comment, CommentResponseDto.class);
 
+    log.info("Comment with id {} returned", commentToReturn.getCommentId());
     return ResponseEntity.ok().headers(headers).body(commentToReturn);
   }
 

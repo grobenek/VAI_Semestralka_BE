@@ -48,4 +48,9 @@ public class PictureServiceImpl implements IPictureService {
     throw new ImageIsNotValidException(
         "Image with file name " + pictureToCreate.getFileName() + " is not valid base64 image!");
   }
+
+  @Override
+  public Picture findPictureByFileName(String fileName) {
+    return this.pictureRepository.findPictureByFileName(fileName);
+  }
 }

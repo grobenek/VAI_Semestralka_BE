@@ -161,6 +161,7 @@ public class BlogController {
 
     this.blogService.deleteBlog(foundBlog);
 
+    log.info("Blog with id {} deleted", id);
     return ResponseEntity.ok().headers(headers).build();
   }
 
@@ -189,6 +190,7 @@ public class BlogController {
     this.blogService.updateBlog(foundBlog, idAuthor, idPicture);
     BlogDto blogDtoToReturn = modelMapper.map(foundBlog, BlogDto.class);
 
+    log.info("Blog with id {} updated", blogToUpdate.getBlogId());
     return ResponseEntity.ok().headers(headers).body(blogDtoToReturn);
   }
 

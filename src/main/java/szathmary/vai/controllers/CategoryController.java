@@ -99,6 +99,7 @@ public class CategoryController {
 
     CategoryDto categoryDtoToReturn = modelMapper.map(category, CategoryDto.class);
 
+    log.info("Category with id {} returned", category.getCategoryId());
     return ResponseEntity.ok().headers(headers).body(categoryDtoToReturn);
   }
 
@@ -117,6 +118,7 @@ public class CategoryController {
 
     CategoryDto categoryDtoToReturn = modelMapper.map(createdCategory, CategoryDto.class);
 
+    log.info("Category with id {} created", categoryDtoToReturn.getCategoryId());
     return ResponseEntity.ok().headers(headers).body(categoryDtoToReturn);
   }
 
@@ -133,6 +135,7 @@ public class CategoryController {
 
     this.categoryService.deleteCategory(foundCategory);
 
+    log.info("Category with id {} deleted", foundCategory.getCategoryId());
     return ResponseEntity.ok().headers(headers).build();
   }
 
@@ -152,6 +155,7 @@ public class CategoryController {
     this.categoryService.updateCategory(foundCategory, categoryNameId, blogId);
     CategoryDto categoryNameDtoToReturn = modelMapper.map(foundCategory, CategoryDto.class);
 
+    log.info("Category with id {} updated", foundCategory.getCategoryId());
     return ResponseEntity.ok().headers(headers).body(categoryNameDtoToReturn);
   }
 

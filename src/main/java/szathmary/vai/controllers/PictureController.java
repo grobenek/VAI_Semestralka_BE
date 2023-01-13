@@ -65,7 +65,14 @@ public class PictureController {
   public ResponseEntity<PictureDto> createPicture(
       @Valid @RequestBody Picture picture
   ) {
+
     HttpHeaders httpHeaders = getHttpHeaders();
+
+    Picture existingPicture = this.pictureService.findPictureByFileName(picture.getFileName());
+    if (existingPicture != null) {
+      PictureDto pictureDtoToReturn = this.modelMapper.map(existingPicture, PictureDto.class);
+      return ResponseEntity.ok().headers(httpHeaders).body(pictureDtoToReturn);
+    }
 
     Picture createdPicture = this.pictureService.createPicture(picture);
 
@@ -76,9 +83,9 @@ public class PictureController {
     log.info("Picture with id {} created!", createdPicture.getPictureId());
 
     PictureDto pictureDtoToReturn = this.modelMapper.map(createdPicture, PictureDto.class);
-
     return ResponseEntity.ok().headers(httpHeaders).body(pictureDtoToReturn);
   }
+
 
   private static HttpHeaders getHttpHeaders() {
     HttpHeaders headers = new HttpHeaders();

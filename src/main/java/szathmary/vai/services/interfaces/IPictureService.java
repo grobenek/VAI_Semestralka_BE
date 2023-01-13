@@ -11,4 +11,6 @@ public interface IPictureService {
   void deletePicture(Picture pictureToDelete);
 
   Picture createPicture(Picture pictureToCreate);
+
+  Picture findPictureByFileName(String fileName);
 }

@@ -5,4 +5,5 @@ import szathmary.vai.entities.Picture;
 
 public interface PictureRepository extends JpaRepository<Picture, Integer> {
 
+  Picture findPictureByFileName(String fileName);
 }

@@ -48,6 +48,7 @@ public class UserController {
     List<UserDto> usersToReturn = users.stream().map(x -> this.modelMapper.map(x, UserDto.class))
         .collect(Collectors.toList());
 
+    log.info("All users returned");
     return ResponseEntity.ok().headers(headers).body(usersToReturn);
   }
 
@@ -87,6 +88,7 @@ public class UserController {
 
     UserDto userToReturn = modelMapper.map(user, UserDto.class);
 
+    log.info("User with id {} returned", userToReturn.getUserId());
     return ResponseEntity.ok().headers(headers).body(userToReturn);
   }
 
@@ -143,6 +145,8 @@ public class UserController {
 
     this.userService.deleteUser(foundUser);
 
+    log.info("Deleted user with id {}", foundUser.getUserId());
+
     return ResponseEntity.ok().headers(headers).build();
   }
 
@@ -151,7 +155,7 @@ public class UserController {
       @NotNull(message = "UserId must not be null!")
       @Positive(message = "UserId must be positive number!")
       @PathVariable Integer id,
-      @Valid @RequestBody User userToUpdate) {
+      @Valid @RequestBody UserDto userToUpdate) {
     HttpHeaders headers = getHttpHeaders();
 
     User foundUser = this.userService.getUserById(id);
@@ -164,6 +168,8 @@ public class UserController {
 
     this.userService.updateUser(foundUser);
     UserDto userToReturn = modelMapper.map(foundUser, UserDto.class);
+
+    log.info("Successfuly updated user with id {}", foundUser.getUserId());
 
     return ResponseEntity.ok().headers(headers).body(userToReturn);
   }
