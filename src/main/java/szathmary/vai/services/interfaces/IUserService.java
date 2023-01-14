@@ -16,4 +16,6 @@ public interface IUserService {
   User createUser(User userToCreate);
 
   User getUserByEmail(String email);
+
+  void updatePassword(String password, Integer id);
 }

@@ -51,4 +51,13 @@ public class UserServiceImpl implements IUserService {
   public User getUserByEmail(String email) {
     return this.userRepository.getUserByEmail(email);
   }
+
+  @Override
+  public void updatePassword(String password, Integer id) {
+    User user = this.userRepository.getReferenceById(id);
+
+    user.setPassword(password);
+
+    this.userRepository.save(user);
+  }
 }

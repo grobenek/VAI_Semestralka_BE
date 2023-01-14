@@ -133,6 +133,8 @@ public class BlogController {
       @Positive(message = "authorId must be positiveNumber") @PathVariable Integer pictureId) {
     HttpHeaders headers = getHttpHeaders();
 
+    log.info("Request for creating new blog getted");
+
     Blog createdBlog = this.blogService.createBlog(blogToCreate, authorId, pictureId);
 
     if (createdBlog == null) {

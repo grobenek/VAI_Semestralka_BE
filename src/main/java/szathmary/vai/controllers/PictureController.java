@@ -71,6 +71,10 @@ public class PictureController {
     Picture existingPicture = this.pictureService.findPictureByFileName(picture.getFileName());
     if (existingPicture != null) {
       PictureDto pictureDtoToReturn = this.modelMapper.map(existingPicture, PictureDto.class);
+
+      log.info("Picture with fileName {} already exists, returning it now",
+          pictureDtoToReturn.getFileName());
+
       return ResponseEntity.ok().headers(httpHeaders).body(pictureDtoToReturn);
     }
 
@@ -80,7 +84,8 @@ public class PictureController {
       throw new ItemNotFoundException("Picture with id " + picture.getPictureId() + " not found!");
     }
 
-    log.info("Picture with id {} created!", createdPicture.getPictureId());
+    log.info("Picture with id {} and file name {} created!", createdPicture.getPictureId(),
+        createdPicture.getFileName());
 
     PictureDto pictureDtoToReturn = this.modelMapper.map(createdPicture, PictureDto.class);
     return ResponseEntity.ok().headers(httpHeaders).body(pictureDtoToReturn);

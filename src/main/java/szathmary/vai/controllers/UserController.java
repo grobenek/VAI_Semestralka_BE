@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import szathmary.vai.dtos.UpdatePasswordDto;
 import szathmary.vai.dtos.UserDto;
 import szathmary.vai.dtos.UserDtoWithPassword;
 import szathmary.vai.entities.User;
@@ -50,6 +51,22 @@ public class UserController {
 
     log.info("All users returned");
     return ResponseEntity.ok().headers(headers).body(usersToReturn);
+  }
+
+  @RequestMapping(path = "change/password/{id}", method = RequestMethod.POST)
+  public ResponseEntity<Boolean> updatePassword(
+      @PathVariable
+      @NotNull(message = "UserId must not be null!")
+      @Positive(message = "UserId must be positive number!") Integer id,
+      @RequestBody @Valid UpdatePasswordDto passwordDto
+  ) {
+    HttpHeaders headers = getHttpHeaders();
+
+    this.userService.updatePassword(passwordDto.getPassword(), id);
+
+    log.info("Password has been changed for user with id {}", id);
+
+    return ResponseEntity.ok().headers(headers).body(true);
   }
 
   @RequestMapping(path = "verify/email/{email}", method = RequestMethod.GET)
