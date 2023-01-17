@@ -47,6 +47,7 @@ public class CategoryNameController {
         .map(x -> this.modelMapper.map(x, CategoryNameDto.class))
         .collect(Collectors.toList());
 
+    log.info("{} categoryNames returned!", categoryNameDtosToReturn.size());
     return ResponseEntity.ok().headers(headers).body(categoryNameDtosToReturn);
   }
 
@@ -102,6 +103,8 @@ public class CategoryNameController {
 
     this.categoryNameService.deleteCategoryName(foundCategoryName);
 
+    log.info("CategoryName with id {} deleted!", foundCategoryName.getCategoryNameId());
+
     return ResponseEntity.ok().headers(headers).build();
   }
 
@@ -125,6 +128,8 @@ public class CategoryNameController {
     this.categoryNameService.updateCategoryName(foundCategoryName);
     CategoryNameDto categoryNameDtoToReturn = modelMapper.map(foundCategoryName,
         CategoryNameDto.class);
+
+    log.info("CategoryName with id {} updated!", foundCategoryName.getCategoryNameId());
 
     return ResponseEntity.ok().headers(headers).body(categoryNameDtoToReturn);
   }

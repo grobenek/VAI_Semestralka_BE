@@ -49,6 +49,7 @@ public class CategoryController {
     List<CategoryDto> categoryDtosToReturn = categories.stream()
         .map(x -> this.modelMapper.map(x, CategoryDto.class)).collect(Collectors.toList());
 
+    log.info("{} categories returned", categoryDtosToReturn.size());
     return ResponseEntity.ok().headers(headers).body(categoryDtosToReturn);
   }
 
